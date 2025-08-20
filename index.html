@@ -4,590 +4,3265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>С Днем Святого Валентина!</title>
+    <title>Эхо Хронографа</title>
     <style>
-        body {
-            font-family: 'Dancing Script', cursive;
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Quattrocento:wght@400;700&display=swap');
+
+        :root {
+            --primary-font: 'Cinzel', serif;
+            --secondary-font: 'Quattrocento', sans-serif;
+            --text-color: #e2d9c2;
+            --dark-bg: #0c0a14;
+            --accent-color: #d4af37;
+            --border-color: #5a4a3a;
+            --solved-color: #6495ED;
+            --error-color: #b33a3a;
+        }
+
+        body,
+        html {
+            height: 100%;
             margin: 0;
-            overflow-x: hidden;
-            background-color: #fce4ec;
-            color: #333;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            position: relative;
-            cursor: pointer;
-        }
-
-        body::before {
-            content: '❤️';
-            position: fixed;
-            pointer-events: none;
-            font-size: 1.5em;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            z-index: 1000;
-            color: #e91e63;
-        }
-
-        .container {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 50px 30px;
-            border-radius: 30px;
-            box-shadow: 0 8px 60px rgba(0, 0, 0, 0.15);
-            max-width: 800px;
-            position: relative;
-            z-index: 1;
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            color: #555;
-        }
-
-        .container:hover {
-            transform: scale(1.04);
-        }
-
-        h1 {
-            color: #e91e63;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.7);
-            animation: pulseTitle 3s infinite alternate;
-            font-size: 2.4em;
-            font-weight: bold;
-        }
-
-        @keyframes pulseTitle {
-            0% {
-                transform: scale(1);
-            }
-
-            100% {
-                transform: scale(1.04);
-            }
-        }
-
-        .message-area {
-            margin-bottom: 40px;
-            font-size: 1.1em;
-            line-height: 1.7;
-            opacity: 1;
-            letter-spacing: 0.6px;
+            padding: 0;
+            font-family: var(--secondary-font);
             overflow: hidden;
-            white-space: normal;
-            animation: none;
-            text-align: left;
-            padding: 15px;
-            border-radius: 15px;
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            background-color: var(--dark-bg);
+            color: var(--text-color);
         }
 
-
-        .author {
-            font-style: italic;
-            margin-top: 30px;
-            color: #777;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
-            animation: fadeInAuthor 2s ease-out forwards;
-            opacity: 1;
-            font-size: 1em;
-        }
-
-        @keyframes fadeInAuthor {
-            to {
-                opacity: 1;
-            }
-        }
-
-
-        .wish-hearts {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .clickable-heart-container {
-            margin: 15px 25px;
-            cursor: pointer;
+        #game-container {
             position: relative;
-            transition: transform 0.4s ease;
+            width: 100%;
+            height: 100%;
         }
 
-        .clickable-heart-container:hover {
-            transform: translateY(-8px);
-        }
-
-        .clickable-heart {
-            font-size: 3em;
-            color: #ff69b4;
-            transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
-            text-shadow: none;
-        }
-
-        .clickable-heart:hover,
-        .clickable-heart:focus {
-            transform: scale(1.4);
-            color: #e91e63;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
-        }
-
-        .wish-text {
+        .room {
             position: absolute;
-            bottom: -70px;
-            left: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .room.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #room-foyer {
+            background-image: url('https://scanshape.ru/api/files/get/3bda3333-a74e-4c59-9d45-2f884115f23c');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .scenery-item {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .scenery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        #scenery-rug {
+            bottom: -5%;
+            left: 10%;
+            width: 80%;
+            height: 60%;
+            transform: perspective(1000px) rotateX(70deg) rotate(40deg);
+            opacity: 0.4;
+        }
+
+        #scenery-chandelier {
+            top: -5%;
+            left: 45%;
             transform: translateX(-50%);
-            background-color: rgba(255, 255, 255, 0.98);
-            padding: 15px 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
-            font-size: 1em;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            z-index: -1;
-            pointer-events: none;
-            color: #e91e63;
-            font-weight: bold;
-        }
-
-        .wish-text.show {
-            opacity: 1;
-            visibility: visible;
-            bottom: -50px;
-            z-index: 2;
-        }
-
-        .confetti-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: red;
-            border-radius: 50%;
-            opacity: 0;
-            animation: confettiFall 1.5s ease-out forwards;
-        }
-
-        @keyframes confettiFall {
-            0% {
-                transform: translateY(0) rotateX(0) rotateY(0);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(250px) rotateX(720deg) rotateY(360deg);
-                opacity: 0;
-            }
-        }
-
-        .heart-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .heart {
-            position: absolute;
-            font-size: 1.5em;
-            color: #ff3366;
-            animation: fall linear infinite, rotateHeart 2s linear infinite;
+            width: 400px;
+            height: 400px;
             opacity: 0.8;
+            filter: drop-shadow(0px 30px 20px rgba(0, 0, 0, 0.5));
+        }
+
+        #scenery-portrait1 {
+            top: 12%;
+            left: 2%;
+            width: 150px;
+            height: 190px;
+            transform: perspective(800px) rotateY(45deg) rotateZ(5deg);
+            filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
+            opacity: 0.9;
+        }
+
+        #scenery-portrait2 {
+            top: 12%;
+            left: 25%;
+            width: 150px;
+            height: 190px;
+            transform: perspective(800px) rotateY(45deg) rotateZ(5deg);
+            filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
+            opacity: 0.9;
+        }
+
+        #scenery-cobweb1 {
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            opacity: 0.6;
+        }
+
+        #scenery-cobweb2 {
+            top: 0;
+            right: 0;
+            width: 250px;
+            height: 250px;
+            transform: scaleX(-1);
+            opacity: 0.6;
+        }
+
+        #room-library {
+            background-image: url('https://scanshape.ru/api/files/get/770e63af-1021-4f9e-80c7-c1a5d901e00d');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #room-study {
+            background-image: url('https://scanshape.ru/api/files/get/726f3e33-8cc2-4029-8a44-53a8db0e036f');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #room-study .interactive-zone img {
+            filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
+            transition: all 0.3s ease-in-out;
+        }
+
+        #room-study .interactive-zone:hover img {
+            filter: drop-shadow(0 0 12px var(--accent-color)) brightness(1.25);
+            transform: scale(1.05);
+        }
+
+        #room-greenhouse {
+            background-image: url('https://scanshape.ru/api/files/get/ee13321c-6385-47c1-866c-f4c7c3b7649e');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #room-laboratory {
+            background-image: url('https://scanshape.ru/api/files/get/8d0c0faa-7df0-4aed-8840-f8c12ac56675');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #room-observatory {
+            background-image: url('https://scanshape.ru/api/files/get/e294543e-1772-4e63-9b04-8071d3bec885');
+
+            background-size: cover;
+            background-position: center;
+            background-color: #000;
+        }
+
+
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.9);
             pointer-events: none;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-            top: 0px;
         }
 
-        @keyframes fall {
-            to {
-                transform: translateY(178vh);
-            }
+        .interactive-zone {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border-radius: 5px;
         }
 
-        @keyframes rotateHeart {
-            0% {
-                transform: rotate(-15deg);
-            }
-
-            50% {
-                transform: rotate(15deg);
-            }
-
-            100% {
-                transform: rotate(-15deg);
-            }
+        .interactive-zone:hover img {
+            filter: drop-shadow(0 0 10px var(--accent-color)) brightness(1.2);
+            transform: scale(1.03);
+            transition: all 0.3s ease;
         }
 
-        @keyframes heartPop {
-            0% {
-                transform: scale(0);
-                opacity: 0.9;
-            }
-
-            80% {
-                transform: scale(1.3);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 0;
-            }
+        .interactive-zone img {
+            transition: all 0.3s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
-        .music-player {
+
+        .interactive-zone.hidden {
+            display: none;
+        }
+
+        #zone-grandfather-clock {
+            top: 45%;
+            left: 30%;
+            width: 200px;
+            height: 300px;
+        }
+
+        #zone-mantelpiece {
+            top: 57%;
+            left: 85%;
+            width: 150px;
+            height: 100px;
+        }
+
+
+        #zone-mosaic-floor {
+            top: 95%;
+            left: 45%;
+            width: 180px;
+            height: 90px;
+            transform: perspective(800px) rotateX(60deg) rotate(30deg);
+        }
+
+        #zone-mosaic-floor img {
+            filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.3));
+        }
+
+        #zone-stained-glass {
+            top: 5%;
+            left: 42%;
+            width: 200px;
+            height: 480px;
+        }
+
+
+        #zone-mirror {
+            top: 54%;
+            left: 10%;
+            width: 150px;
+            height: 250px;
+        }
+
+
+        #zone-armor {
+            top: 50%;
+            left: 58%;
+            width: 200px;
+            height: 450px;
+        }
+
+        #zone-console-table {
+            top: 75%;
+            left: 8%;
+            width: 250px;
+            height: 200px;
+            transform: perspective(800px) rotateX(40deg);
+        }
+
+        #zone-console-table img {
+            filter: drop-shadow(8px 10px 10px rgba(0, 0, 0, 0.5));
+        }
+
+
+        #zone-cipher-disk {
+            top: 60%;
+            left: 30%;
+            width: 150px;
+            height: 100px;
+        }
+
+        #zone-astronomy-book {
+            top: 30%;
+            left: 70%;
+            width: 200px;
+            height: 150px;
+        }
+
+        #zone-desk-lamp {
+            top: 55%;
+            left: 10%;
+            width: 150px;
+            height: 150px;
+        }
+
+        #zone-lab-chalkboard {
+            top: 20%;
+            right: 5%;
+            width: 250px;
+            height: 350px;
+            transform: perspective(800px) rotateY(-20deg);
+        }
+
+        #zone-ingredient-cabinet {
+            top: -5%;
+            left: 15%;
+            width: 300px;
+            height: 300px;
+        }
+
+        #zone-portrait {
+            top: 5%;
+            left: 45%;
+            width: 250px;
+            height: 300px;
+        }
+
+        #zone-wall-safe {
+            top: 10%;
+            left: 46%;
+            width: 180px;
+            height: 210px;
+        }
+
+        #zone-writers-desk {
+            top: 45%;
+            left: 20%;
+            width: 60%;
+            height: 400px;
+        }
+
+        #zone-desk-lamp {
+            top: 40%;
+            left: 60%;
+            width: 150px;
+            height: 450px;
+        }
+
+        #zone-cipher-disk {
+            top: 41%;
+            left: 42%;
+            width: 150px;
+            height: 100px;
+        }
+
+        #zone-globe {
+            top: 50%;
+            left: 15%;
+            width: 300px;
+            height: 350px;
+        }
+
+        #zone-persian-rug {
+            top: 87%;
+            left: 42%;
+            width: 400px;
+            height: 300px;
+        }
+
+        #zone-loose-floorboard {
+            top: 90%;
+            left: 8%;
+            width: 50px;
+            height: 20px;
+        }
+
+        #zone-bookshelf-puzzle {
+            top: 5%;
+            left: 0%;
+            width: 80%;
+            height: 50%;
+        }
+
+        #zone-library-desk {
+            top: 65%;
+            left: 0%;
+            width: 550px;
+            height: 450px;
+        }
+
+        #zone-reading-nook {
+            top: 45%;
+            left: 70%;
+            width: 450px;
+            height: 550px;
+        }
+
+        #zone-grand-piano {
+            top: 50%;
+            left: 30%;
+            width: 300px;
+            height: 250px;
+        }
+
+        #zone-library-fireplace {
+            top: 25%;
+            left: 80%;
+            width: 20%;
+            height: 45%;
+        }
+
+        #zone-dry-fountain {
+            top: 15%;
+            left: 40%;
+            width: 600px;
+            height: 600px;
+        }
+
+        #zone-moonpetal-plant {
+            top: 75%;
+            left: 85%;
+            width: 50px;
+            height: 50px;
+        }
+
+        #zone-strange-machine {
+            top: 30%;
+            left: 30%;
+            width: 300px;
+            height: 200px;
+        }
+
+        #zone-chem-station {
+            top: 60%;
+            left: 30%;
+            width: 40%;
+            height: 35%;
+        }
+
+
+        #zone-projection-device {
+            top: 50%;
+            left: 70%;
+            width: 200px;
+            height: 300px;
+        }
+
+        #zone-symbol-lock {
+            top: 15%;
+            left: 1%;
+            width: 100;
+            height: 100px;
+        }
+
+        #zone-final-chronograph {
+            top: 41%;
+            left: 14%;
+            width: 200px;
+            height: 300px;
+        }
+
+        #zone-telescope {
+            top: 30%;
+            left: 50%;
+            width: 300px;
+            height: 400px;
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 4em;
+            color: rgba(212, 175, 55, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+            user-select: none;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-arrow:hover {
+            color: var(--accent-color);
+            transform: translateY(-50%) scale(1.1);
+            text-shadow: 0 0 15px var(--accent-color);
+        }
+
+        #nav-arrow-left {
+            left: 20px;
+        }
+
+        #nav-arrow-right {
+            right: 20px;
+        }
+
+        .nav-arrow.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #inventory-bar {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background-color: rgba(255, 255, 255, 0.9);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
             padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
         }
 
-        .music-player:hover {
+        .inventory-item {
+            width: 70px;
+            height: 70px;
+            border: 2px solid var(--border-color);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .inventory-item:hover {
+            border-color: var(--accent-color);
             transform: scale(1.1);
         }
 
-        .music-player img {
-            width: 40px;
-            height: 40px;
+        .inventory-item.active {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+            transform: scale(1.1);
         }
 
-
-        .photo-album {
-            display: flex;
+        .item-viewer-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
             justify-content: center;
-            margin-top: 20px;
-            gap: 10px;
-            flex-direction: column;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
 
-        .photo-album img {
-            width: 80%;
-            max-width: 200px;
-            height: auto;
-            border-radius: 15px;
-            object-fit: cover;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.15);
-            margin-bottom: 10px;
-        }
-
-        .photo-album img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
-        }
-
-
-        .wish-slider {
-            margin-top: 20px;
+        .item-viewer-content {
+            background-color: #1c1812;
+            border: 2px solid var(--border-color);
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+            color: var(--text-color);
             position: relative;
-            overflow: hidden;
-            height: 100px;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            background-color: rgba(255, 255, 255, 0.9);
         }
 
-        .wish-slider .wishes {
-            display: flex;
-            transition: transform 0.6s ease;
-        }
-
-        .wish-slider .wish {
-            min-width: 100%;
-            text-align: center;
-            font-size: 1.1em;
-            color: #e91e63;
-            padding: 15px;
-            font-weight: bold;
-        }
-
-        .surprise-button {
-            margin-top: 20px;
-            padding: 12px 24px;
-            font-size: 1.1em;
-            color: white;
-            background-color: #e91e63;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-weight: bold;
-        }
-
-        .surprise-button:hover {
-            background-color: #c2185b;
-            transform: scale(1.03);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
-
-        #surpriseContainer {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.97);
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            text-align: center;
-            z-index: 1001;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-            transform: translate(-50%, -50%) scale(0.9);
-        }
-
-        #surpriseContainer.surprise-show {
-            display: block;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .surprise-image {
-            max-width: 80%;
-            max-height: 300px;
-            height: auto;
+        .item-viewer-content h2 {
+            font-family: var(--primary-font);
+            font-size: 2.5em;
             margin-bottom: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+            color: var(--accent-color);
         }
 
-        .surprise-message {
-            font-size: 1.3em;
-            color: #e91e63;
-            margin-bottom: 30px;
-            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
-            font-weight: bold;
-        }
-
-        .close-surprise-button {
-            padding: 12px 24px;
-            font-size: 1em;
-            color: white;
-            background-color: #e91e63;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
-            font-weight: bold;
-        }
-
-        .close-surprise-button:hover {
-            background-color: #c2185b;
-            transform: scale(1.02);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
-        }
-
-
-        #filmButton {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            padding: 8px 12px;
-            font-size: 12px;
-            cursor: pointer;
-            background-color: #e91e63;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            font-weight: bold;
-            z-index: 1003;
-        }
-
-        #filmButton:hover {
-            background-color: #c2185b;
-            transform: scale(1.05);
-        }
-
-        #filmModal {
+        .item-info-popup {
             display: none;
             position: fixed;
-            top: 50%;
+            bottom: 120px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.98);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            z-index: 1002;
-            text-align: left;
+            transform: translateX(-50%);
+            background: rgba(12, 10, 20, 0.95);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            z-index: 1001;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .item-info-popup h3 {
+            margin: 0 0 10px 0;
+            color: var(--accent-color);
+            font-family: var(--primary-font);
+        }
+
+        .item-info-popup p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #1c1812;
+            border: 2px solid var(--border-color);
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            color: var(--text-color);
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+            position: relative;
             max-height: 80vh;
             overflow-y: auto;
         }
 
-        #filmModal h3 {
-            color: #e91e63;
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-size: 1.2em;
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
         }
 
-        #filmModal p {
+        .modal-content h2 {
+            font-family: var(--primary-font);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .modal-content p {
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .modal-content button {
+            padding: 12px 25px;
+            background: none;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            cursor: pointer;
+            font-family: var(--primary-font);
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .modal-content button:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2.5em;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .code-input,
+        .text-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.8em;
+            background-color: #e2d9c2;
+            color: #1c1812;
+            border: 2px solid var(--border-color);
+            margin: 0 5px;
+            font-family: var(--primary-font);
+        }
+
+        .text-input {
+            width: 250px;
+            text-transform: uppercase;
+        }
+
+        .fountain-buttons button,
+        .piano-key,
+        .symbol-lock-btn {
+            width: 60px;
+            height: 60px;
+            font-size: 2em;
+            margin: 5px;
+            border: 2px solid var(--accent-color);
+            background: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fountain-buttons button:hover,
+        .piano-key:hover,
+        .symbol-lock-btn:hover {
+            background: var(--accent-color);
+            color: var(--dark-bg);
+        }
+
+        .piano-key {
+            width: 40px;
+            height: 120px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .symbol-lock-btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        #modal-feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            height: 20px;
+            transition: color 0.3s;
+        }
+
+        .correct {
+            color: var(--solved-color);
+        }
+
+        .incorrect {
+            color: var(--error-color);
+        }
+
+        .star-map-canvas {
+            background-color: #000;
+            border: 1px solid var(--accent-color);
+            cursor: crosshair;
+        }
+
+        #password-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(12, 10, 20, 0.98);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out;
+        }
+
+        #password-menu.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .password-box {
+            text-align: center;
+            padding: 40px;
+            border: 2px solid var(--border-color);
+            background-color: #1c1812;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            max-width: 400px;
+        }
+
+        .password-box h1 {
+            font-family: var(--primary-font);
+            color: var(--accent-color);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .password-box p {
+            font-size: 1.1em;
             margin-bottom: 15px;
-            line-height: 1.5;
+        }
+
+        #password-input {
+            width: 250px;
+            padding: 10px;
+            font-size: 1.2em;
+            background-color: #e2d9c2;
+            color: #1c1812;
+            border: 2px solid var(--border-color);
+            font-family: var(--secondary-font);
+            text-align: center;
+        }
+
+        #password-submit {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: none;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            cursor: pointer;
+            font-family: var(--primary-font);
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        #password-submit:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+        }
+
+        #password-feedback {
+            margin-top: 15px;
+            height: 20px;
+            font-weight: bold;
+            color: var(--error-color);
+        }
+
+        #game-container.locked {
+            filter: blur(8px);
+            pointer-events: none;
+        }
+
+        #room-title {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--primary-font);
+            font-size: 2.8em;
+            color: var(--accent-color);
+            text-shadow:
+                -1px -1px 1px #000,
+                1px -1px 1px #000,
+                -1px 1px 1px #000,
+                1px 1px 1px #000,
+                0 0 20px rgba(0, 0, 0, 0.9);
+            z-index: 50;
+            pointer-events: none;
+            user-select: none;
+            opacity: 1;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        #room-title.fading {
+            opacity: 0;
+        }
+
+        #dragged-item {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            width: 70px;
+            height: 70px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: none;
+            transform: translate(-50%, -50%);
+        }
+
+        #zone-aetheria-bloom {
+            top: 60%;
+            left: 15%;
+            width: 100px;
+            height: 100px;
+        }
+
+        #zone-crimsonthorn {
+            top: 85%;
+            left: 60%;
+            width: 80px;
+            height: 120px;
+        }
+
+        #zone-ghostpetal {
+            top: 30%;
+            left: 80%;
+            width: 90px;
+            height: 90px;
+        }
+
+        #zone-sunspore {
+            top: 80%;
+            left: 35%;
+            width: 110px;
+            height: 110px;
+        }
+
+        #zone-shadowgem {
+            top: 55%;
+            left: 5%;
+            width: 100px;
+            height: 130px;
+        }
+
+        .flower-collectible:hover img {
+            filter: drop-shadow(0 0 15px #aafff0) brightness(1.3);
+            transform: scale(1.1);
+        }
+
+        #prologue-modal-content {
+            padding: 50px 60px;
+            border: 2px solid #d4af37;
+            border-image: linear-gradient(145deg, #d4af37, #8c6a2c, #d4af37) 1;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(212, 175, 55, 0.1);
+
+            background-color: #1a1f2c;
+            background-image:
+                linear-gradient(rgba(226, 217, 194, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(226, 217, 194, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at center, rgba(14, 18, 38, 0.5) 0%, rgba(12, 10, 20, 0.9) 80%),
+                repeating-radial-gradient(circle at center, rgba(226, 217, 194, 0.02) 0, rgba(226, 217, 194, 0.02) 1px, transparent 1px, transparent 10px);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+        }
+
+        .prologue-row {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            margin-bottom: 25px;
+        }
+
+        .prologue-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .prologue-row.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .prologue-image-placeholder {
+            position: relative;
+            flex: 1;
+            min-width: 320px;
+            height: 220px;
+            background-color: rgba(12, 10, 20, 0.5);
+            border: 1px solid #5a4a3a;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7d6b5a;
+            font-family: var(--primary-font);
+            font-size: 1em;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .prologue-image-placeholder::before,
+        .prologue-image-placeholder::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-color: var(--accent-color);
+            border-style: solid;
+            opacity: 0.8;
+        }
+
+        .prologue-image-placeholder::before {
+            top: -6px;
+            left: -6px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .prologue-image-placeholder::after {
+            bottom: -6px;
+            right: -6px;
+            border-width: 0 2px 2px 0;
+        }
+
+        .prologue-text {
+            flex: 1.5;
+            text-align: left;
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: var(--text-color);
+        }
+
+        #prologue-modal-content .prologue-text p:first-of-type::first-letter {
+            font-family: var(--primary-font);
+            float: left;
+            font-size: 4em;
+            line-height: 0.8;
+            margin-right: 8px;
+            color: var(--accent-color);
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        #prologue-cutscene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #prologue-cutscene.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #prologue-stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #prologue-stage img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 2.5s ease-in-out;
+        }
+
+        #prologue-vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 250px rgba(0, 0, 0, 1);
+            z-index: 2;
+        }
+
+        #prologue-caption-container {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            max-width: 900px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            padding: 50px 40px 20px 40px;
+            text-align: center;
+            z-index: 3;
+        }
+
+        #prologue-caption {
+            font-family: var(--secondary-font);
+            font-size: 1.5em;
+            color: var(--text-color);
+            line-height: 1.6;
+            text-shadow: 1px 1px 5px #000;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        #prologue-caption.visible {
+            opacity: 1;
+        }
+
+        #prologue-skip {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            color: rgba(212, 175, 55, 0.7);
+            font-family: var(--primary-font);
+            padding: 10px 20px;
+            cursor: pointer;
+            z-index: 4;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        #prologue-skip:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            border-color: var(--accent-color);
+        }
+
+        #final-code-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(12, 10, 20, 0.98);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-in;
+            opacity: 1;
+        }
+
+        #final-code-menu.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .final-box {
+            text-align: center;
+            padding: 40px;
+            border: 2px solid var(--border-color);
+            background-color: #1c1812;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            max-width: 900px;
+            color: var(--text-color);
+        }
+
+        .final-box h1 {
+            font-family: var(--primary-font);
+            color: var(--accent-color);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .final-box p {
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .binary-code-box {
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            font-family: monospace;
+            text-align: center;
+            border: 1px solid #0f0;
+            margin: 20px auto;
+            max-width: 95%;
+            overflow-wrap: break-word;
             font-size: 1em;
         }
 
-        #filmModal button {
-            padding: 8px 16px;
-            font-size: 0.9em;
-            color: white;
-            background-color: #e91e63;
-            border: none;
+        .final-question {
+            text-align: center;
+            margin-top: 25px;
+            font-family: var(--primary-font);
+            color: var(--accent-color);
+        }
+
+        #zone-orrery {
+            top: 80%;
+            left: 10%;
+            width: 300px;
+            height: 250px;
+        }
+
+        #zone-star-chart-puzzle {
+            top: 5%;
+            left: 75%;
+            width: 150px;
+            height: 200px;
+            transform: perspective(800px) rotateY(-30deg);
+            opacity: 0.8;
+        }
+
+        #scenery-celestial-globe {
+            top: 45%;
+            left: 80%;
+            width: 180px;
+            height: 220px;
+            opacity: 0.9;
+        }
+
+        #scenery-strewn-papers {
+            bottom: 5%;
+            left: 30%;
+            width: 400px;
+            height: 150px;
+            transform: perspective(1000px) rotateX(75deg);
+            opacity: 0.7;
+        }
+
+        #zone-star-chart-puzzle img,
+        #zone-orrery img {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #zone-star-chart-puzzle:hover img {
+            filter: drop-shadow(0 0 15px #6495ED) brightness(1.3);
+            transform: scale(1.05);
+        }
+
+        #zone-orrery:hover img {
+            filter: drop-shadow(0 0 20px var(--accent-color)) brightness(1.2);
+            transform: perspective(1000px) rotateX(15deg) scale(1.03);
+        }
+
+        #feedback-message {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(12, 10, 20, 0.95);
+            color: var(--text-color);
+            padding: 12px 22px;
             border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            font-weight: bold;
+            border: 1px solid var(--border-color);
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            font-size: 1.1em;
         }
 
-        #filmModal button:hover {
-            background-color: #c2185b;
-            transform: scale(1.03);
+        #feedback-message.visible {
+            opacity: 1;
         }
 
-        @media (max-width: 768px) {
-            body::before {
-                display: none;
-            }
+        #zone-armillary-sphere {
+            top: 70%;
+            left: 28%;
+            width: 150px;
+            height: 180px;
+        }
 
-            .container {
-                padding: 30px 20px;
-                border-radius: 20px;
-            }
+        #zone-wall-charts {
+            top: 45%;
+            left: 10%;
+            width: 35%;
+            height: 25%;
+        }
 
-            h1 {
-                font-size: 2em;
-                margin-bottom: 20px;
-            }
+        #zone-observatory-windows {
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 40%;
+        }
 
-            .message-area {
-                font-size: 1em;
-                padding: 10px;
-                margin-bottom: 30px;
-            }
+        #zone-desk-globe {
+            top: 70%;
+            left: 80%;
+            width: 250px;
+            height: 200px;
+        }
 
-            .wish-hearts {
-                margin-bottom: 20px;
-            }
+        #zone-lab-ingredient-shelves {
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 35%;
+        }
 
-            .clickable-heart {
-                font-size: 2.5em;
-            }
+        #zone-lab-drawers-left {
+            top: 55%;
+            left: 2%;
+            width: 28%;
+            height: 30%;
+        }
 
-            .wish-text {
-                font-size: 0.9em;
-                padding: 10px 15px;
-                bottom: -60px;
-            }
+        #zone-lab-drawers-right {
+            top: 55%;
+            right: 2%;
+            width: 28%;
+            height: 30%;
+        }
 
-            .wish-text.show {
-                bottom: -40px;
-            }
+        #zone-lab-distiller {
+            top: 45%;
+            left: 42%;
+            width: 16%;
+            height: 30%;
+        }
 
-            .photo-album {
-                margin-top: 15px;
-                gap: 8px;
-            }
+        #zone-lab-microscope {
+            top: 80%;
+            left: 7%;
+            width: 10%;
+            height: 15%;
+        }
 
-            .wish-slider {
-                margin-top: 15px;
-                height: 80px;
-            }
+        #zone-study-microscope {
+            top: 55%;
+            left: 30%;
+            width: 15%;
+            height: 29%;
+        }
 
-            .wish-slider .wish {
-                font-size: 1em;
-                padding: 10px;
-            }
+        #zone-lab-scales {
+            top: 78%;
+            left: 55%;
+            width: 15%;
+            height: 18%;
+        }
 
-            .surprise-button {
-                margin-top: 15px;
-                padding: 10px 20px;
-                font-size: 1em;
-            }
+        #zone-foyer-staircase {
+            top: 55%;
+            left: 55%;
+            width: 25%;
+            height: 40%;
+        }
 
-            #surpriseContainer {
-                padding: 20px;
-                border-radius: 20px;
-            }
+        #zone-foyer-window {
+            top: 5%;
+            left: 60%;
+            width: 35%;
+            height: 40%;
+        }
 
-            .surprise-image {
-                margin-bottom: 15px;
-            }
+        #zone-foyer-archway {
+            top: 45%;
+            left: 15%;
+            width: 20%;
+            height: 40%;
+        }
 
-            .surprise-message {
-                font-size: 1.2em;
-                margin-bottom: 20px;
-            }
+        #zone-foyer-portraits {
+            top: 0%;
+            left: 0%;
+            width: 45%;
+            height: 30%;
+        }
 
-            .close-surprise-button {
-                padding: 10px 20px;
-                font-size: 0.9em;
-            }
+        #zone-foyer-chandelier {
+            top: 0%;
+            left: 35%;
+            width: 30%;
+            height: 30%;
+        }
 
-            #filmButton {
-                bottom: 5px;
-                left: 5px;
-                padding: 6px 10px;
-                font-size: 10px;
-            }
+        #zone-study-bookshelf {
+            top: 10%;
+            left: 72%;
+            width: 28%;
+            height: 80%;
+        }
 
-            #filmModal {
-                padding: 15px;
-                border-radius: 10px;
-            }
+        #zone-study-armillary-sphere {
+            top: 38%;
+            left: 55%;
+            width: 10%;
+            height: 18%;
+        }
 
-            #filmModal h3 {
-                font-size: 1.1em;
-                margin-bottom: 8px;
-            }
+        #zone-study-window {
+            top: 15%;
+            left: 4%;
+            width: 24%;
+            height: 50%;
+        }
 
-            #filmModal p {
-                margin-bottom: 12px;
-                font-size: 0.9em;
-            }
+        #zone-desk-papers {
+            top: 65%;
+            left: 38%;
+            width: 25%;
+            height: 15%;
+        }
 
-            #filmModal button {
-                padding: 6px 12px;
-                font-size: 0.8em;
-            }
+        #zone-library-globe {
+            top: 55%;
+            left: 18%;
+            width: 15%;
+            height: 30%;
+        }
+
+        #zone-library-ladder {
+            top: 55%;
+            left: 55%;
+            width: 10%;
+            height: 25%;
+        }
+
+
+
+        #zone-library-bust {
+            top: 48%;
+            left: 2%;
+            width: 10%;
+            height: 20%;
         }
     </style>
 </head>
 
-<body onclick="spawnHeart(event)">
-    <div class="confetti-container" id="confettiContainer">
-
+<body>
+    <div id="password-menu">
+        <div class="password-box">
+            <h1>Поместье Вейлов</h1>
+            <p>Вы получили письмо с приглашением расследовать тайну изобретателя Элиаса Вейла. В письме было лишь одно
+                кодовое слово.</p>
+            <input type="text" id="password-input" autocomplete="off" placeholder="Введите кодовое слово">
+            <button id="password-submit">Войти</button>
+            <p id="password-feedback"></p>
+        </div>
     </div>
+    <div id="game-container" class="locked">
+        <h1 id="room-title"></h1>
 
-   00110010 00111010 00110010 00111010 00110100 00100000 00110100 00111010 00110010 00111010 00110001 00100000 00110001 00111010 00110001 00111010 00110010 00100000 00110001 00111010 00110010 00111010 00110001 00100000 00110010 00111010 00110011 00111010 00110011 00100000 00110001 00111010 00110011 00111010 00110010 00100000 00111000 00111010 00110001 00111010 00110011 00100000 00110111 00111010 00110001 00111010 00110001 00100000 00110001 00111010 00110001 00111010 00110001 00100000 00110010 00111010 00110011 00111010 00110011 00100000 00110001 00111010 00110011 00111010 00110101 00100000 00110101 00111010 00110010 00111010 00110001 00001010 11010000 10011010 11010000 10111101 11010000 10111000 11010000 10110011 11010000 10110000 00100000 00101101 00100000 11010000 10111100 11010000 10111110 11010000 10111001 00100000 11010001 10000001 11010001 10000010 11010000 10111000 11010001 10000101</body>
+        <div id="room-foyer" class="room active">
+            <div class="vignette"></div>
+            <div class="interactive-zone" id="zone-stained-glass"></div>
+            <div class="interactive-zone" id="zone-foyer-staircase" title="Парадная лестница"></div>
+            <div class="interactive-zone" id="zone-foyer-window" title="Большое окно"></div>
+            <div class="interactive-zone" id="zone-foyer-archway" title="Арка"></div>
+            <div class="interactive-zone" id="zone-foyer-portraits" title="Портреты"></div>
+            <div class="interactive-zone" id="zone-foyer-chandelier" title="Хрустальная люстра"></div>
+
+            <div class="scenery-item" id="scenery-chandelier"></div>
+            <div class="scenery-item" id="scenery-cobweb1"><img
+                    src="https://scanshape.ru/api/files/get/97bdb571-d6b8-4cac-9666-93f50bf6266b" alt="Паутина"></div>
+            <div class="scenery-item" id="scenery-cobweb2"><img
+                    src="https://scanshape.ru/api/files/get/97bdb571-d6b8-4cac-9666-93f50bf6266b" alt="Паутина"></div>
+
+
+
+            <div class="interactive-zone" id="zone-grandfather-clock"></div>
+            <div class="interactive-zone" id="zone-mantelpiece"></div>
+            <div class="interactive-zone" id="zone-mosaic-floor"><img
+                    src="https://scanshape.ru/api/files/get/2cc90ad5-f1f6-4ba4-8cd8-a4681e636f7c"
+                    alt="Напольная мозаика"></div>
+
+
+
+            <div class="interactive-zone" id="zone-mirror"></div>
+            <div class="interactive-zone" id="zone-armor"></div>
+            <div class="interactive-zone" id="zone-console-table"><img
+                    src="https://scanshape.ru/api/files/get/0f311cc5-9ed9-401b-be9a-acba359e96e7" alt="Резной столик">
+            </div>
+        </div>
+
+        <div id="room-study" class="room">
+            <div class="vignette"></div>
+            <div class="interactive-zone" id="zone-study-window" title="Окно"></div>
+            <div class="interactive-zone" id="zone-portrait" title="Портрет"></div>
+            <div class="interactive-zone hidden" id="zone-wall-safe"><img
+                    src="https://scanshape.ru/api/files/get/640c8197-9093-4769-8346-b8918cb4e2b4" alt="Настенный сейф">
+            </div>
+            <div class="interactive-zone" id="zone-writers-desk" title="Письменный стол"></div>
+            <div class="interactive-zone" id="zone-desk-lamp"></div>
+
+
+            <div class="interactive-zone" id="zone-cipher-disk"></div>
+            <div class="interactive-zone" id="zone-globe"></div>
+            <div class="interactive-zone" id="zone-persian-rug"></div>
+            <div class="interactive-zone hidden" id="zone-loose-floorboard"><img
+                    src="https://scanshape.ru/api/files/get/0fe6ec93-d155-45d9-8f39-2825a05018a7"
+                    alt="Расшатанная половица"></div>
+            <div class="interactive-zone" id="zone-study-microscope" title="Микроскоп"></div>
+
+            <div class="interactive-zone" id="zone-study-bookshelf" title="Книжный шкаф"></div>
+
+            <div class="interactive-zone" id="zone-desk-papers" title="Бумаги на столе"></div>
+        </div>
+
+
+
+        <div id="room-library" class="room">
+            <div class="vignette"></div>
+            <div class="interactive-zone" id="zone-library-fireplace"></div>
+            <div class="interactive-zone" id="zone-reading-nook"></div>
+            <div class="interactive-zone" id="zone-grand-piano"></div>
+            <div class="interactive-zone" id="zone-library-desk"></div>
+            <div class="interactive-zone" id="zone-bookshelf-puzzle"></div>
+            <div class="interactive-zone" id="zone-library-ladder"></div>
+
+        </div>
+
+
+        <div id="room-greenhouse" class="room">
+            <div class="vignette"></div>
+            <div class="interactive-zone" id="zone-dry-fountain"></div>
+            <div class="interactive-zone" id="zone-moonpetal-plant"></div>
+            <div class="interactive-zone" id="zone-strange-machine"></div>
+            <div class="interactive-zone flower-collectible" id="zone-aetheria-bloom"></div>
+            <div class="interactive-zone flower-collectible" id="zone-crimsonthorn"></div>
+            <div class="interactive-zone flower-collectible" id="zone-ghostpetal"></div>
+            <div class="interactive-zone flower-collectible" id="zone-sunspore"></div>
+            <div class="interactive-zone flower-collectible" id="zone-shadowgem"></div>
+        </div>
+
+        <div id="room-laboratory" class="room">
+            <div class="vignette"></div>
+
+            <div class="interactive-zone" id="zone-lab-ingredient-shelves" title="Полки с реагентами"></div>
+            <div class="interactive-zone" id="zone-lab-drawers-left" title="Лабораторные ящики"></div>
+            <div class="interactive-zone" id="zone-lab-drawers-right" title="Лабораторные ящики"></div>
+            <div class="interactive-zone" id="zone-lab-distiller" title="Перегонный аппарат"></div>
+            <div class="interactive-zone" id="zone-lab-microscope" title="Микроскоп"></div>
+            <div class="interactive-zone" id="zone-lab-scales" title="Аптекарские весы"></div>
+
+            <div class="interactive-zone" id="zone-chem-station" title="Химический стол"></div>
+
+            <div class="interactive-zone hidden" id="zone-projection-device"><img
+                    src="https://scanshape.ru/api/files/get/f8507a22-5337-46f9-86d1-41e5d8d5555f"
+                    alt="Проекционное устройство"></div>
+            <div class="interactive-zone" id="zone-symbol-lock"><img
+                    src="https://scanshape.ru/api/files/get/a3781189-021c-4b35-98d2-5e867f83dc9f"
+                    alt="Символьный замок">
+            </div>
+        </div>
+
+        <div id="room-observatory" class="room">
+            <div class="vignette"></div>
+
+
+            <div class="interactive-zone" id="zone-armillary-sphere" title="Армиллярная сфера"></div>
+            <div class="interactive-zone" id="zone-wall-charts" title="Звездные карты"></div>
+            <div class="interactive-zone" id="zone-observatory-windows" title="Окна обсерватории"></div>
+            <div class="interactive-zone" id="zone-desk-globe" title="Настольный глобус"></div>
+
+
+            <div class="scenery-item" id="scenery-celestial-globe"><img
+                    src="https://scanshape.ru/api/files/get/5072d945-8f15-4f64-8694-734bba2dd462" alt="Небесный глобус">
+            </div>
+            <div class="scenery-item" id="scenery-strewn-papers"><img
+                    src="https://scanshape.ru/api/files/get/d26081c8-8942-48cb-81f0-97791bfba000"
+                    alt="Разбросанные бумаги">
+            </div>
+
+            <div class="interactive-zone" id="zone-final-chronograph"><img
+                    src="https://scanshape.ru/api/files/get/9089ffe9-5d4d-4c6b-ae86-4ee802883415"
+                    alt="Небесный Хронограф">
+            </div>
+            <div class="interactive-zone" id="zone-telescope"></div>
+            <div class="interactive-zone" id="zone-orrery"><img
+                    src="https://scanshape.ru/api/files/get/702260d8-a7b6-4e7a-9095-df621573a723"
+                    alt="Механический планетарий"></div>
+            <div class="interactive-zone" id="zone-star-chart-puzzle"><img
+                    src="https://scanshape.ru/api/files/get/3b447d33-32a4-43ec-9dd3-29293b843665"
+                    alt="Настенная звездная карта"></div>
+        </div>
+
+        <div id="nav-arrow-left" class="nav-arrow hidden" onclick="changeRoom(-1)">&#10094;</div>
+        <div id="nav-arrow-right" class="nav-arrow" onclick="changeRoom(1)">&#10095;</div>
+
+        <div id="item-viewer" class="item-viewer-modal" onclick="closeItemViewer()">
+            <div class="item-viewer-content" onclick="event.stopPropagation()">
+                <span class="close-btn" onclick="closeItemViewer()">&times;</span>
+                <h2 id="item-viewer-title"></h2>
+                <div id="item-viewer-body"></div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-container" class="modal-overlay">
+        <div class="modal-content"> <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <div id="inventory-bar"></div>
+    <div id="item-info" class="item-info-popup">
+        <h3 id="item-info-title"></h3>
+        <p id="item-info-desc"></p>
+    </div>
+    <div id="dragged-item"></div>
+    <div id="feedback-message"></div>
+    <audio id="bg-music" loop src="https://zvukipro.com/uploads/files/2020-02/1582721695_7a6cb79ec5fa15f.mp3"></audio>
+    <audio id="sfx-click" src="https://zvukipro.com/uploads/files/2019-09/1568274777_e61cdb72dc8aa8c.mp3"></audio>
+    <audio id="sfx-unlock" src="https://zvukipro.com/uploads/files/2019-04/1555434765_9b00423d1fe4c80.mp3"></audio>
+    <audio id="sfx-pickup" src="https://zvukipro.com/uploads/files/2020-03/1584776112_bfac32f9177e5f3.mp3"></audio>
+    <audio id="sfx-secret" src="https://zvukipro.com/uploads/files/2020-11/1604627624_e4fd05103e0d514.mp3"></audio>
+    <audio id="sfx-error"
+        src="https://zvukipro.com/uploads/files/2024-06/1717997030_6_sto-k-odnomu-ne-pra_ilnyy-ot_e.mp3"></audio>
+    <audio id="sfx-win" src="https://zvukipro.com/uploads/files/2019-09/1569138048_2793b869a944069.mp3"></audio>
+    <audio id="prologue-narration"></audio>
+    <div id="prologue-cutscene">
+        <div id="prologue-vignette"></div>
+        <div id="prologue-stage">
+            <img id="prologue-img-1" src="" alt="Сцена из пролога">
+            <img id="prologue-img-2" src="" alt="Сцена из пролога">
+        </div>
+        <div id="prologue-caption-container">
+            <p id="prologue-caption"></p>
+        </div>
+        <button id="prologue-skip">Пропустить &#9654;&#9654;</button>
+    </div>
+    <div id="final-code-menu" class="hidden">
+        <div class="final-box">
+            <h1>Найденная Записка</h1>
+            <p>Вы аккуратно берете пергамент в руки. Он холоден, как лёд, но не рассыпается в прах. На нем, выведенные
+                странным, угловатым почерком, видны лишь ряды нулей и единиц...</p>
+            <div class="binary-code-box">
+                00110010 00111010 00110010 00111010 00110100 00100000 00110100 00111010 00110010 00111010 00110001
+                00100000
+                00110001 00111010 00110001 00111010 00110012 00100000 00110001 00111010 00110010 00111010 00110001
+                00100000
+                00110010 00111010 00110011 00111010 00110011 00100000 00110001 00111010 00110011 00111010 00110012
+                00100000
+                00111000 00111010 00110001 00111010 00110011 00100000 00110111 00111010 00110001 00111010 00110001
+                00100000
+                00110001 00111010 00110001 00111010 00110001 00100000 00110010 00111010 00110011 00111010 00110011
+                00100000
+                00110001 00111010 00110011 00111010 00110101 00100000 00110101 00111010 00110010 00111010 00110001
+                00001010
+                11010000 10011010 11010000 10111101 11010000 10111000 11010000 10110011 11010000 10110000 00100000
+                00101101
+                00100000 11010000 10111100 11010000 10111110 11010000 10111001 00100000 11010001 10000001 11010001
+                10000010
+                11010000 10111000 11010001 10000101
+            </div>
+            <p>...Что это? Координаты? Послание? Или ключ к новой, еще большей загадке?</p>
+            <p class="final-question">КОНЕЦ?</p>
+        </div>
+    </div>
+    <script>
+        const rooms = ['foyer', 'study', 'library', 'greenhouse', 'laboratory', 'observatory'];
+        const roomNames = {
+            foyer: 'Фойе',
+            study: 'Кабинет',
+            library: 'Библиотека',
+            greenhouse: 'Оранжерея',
+            laboratory: 'Лаборатория',
+            observatory: 'Обсерватория'
+        };
+        const gameState = {
+            currentRoom: 0,
+            inventory: new Map(),
+            solvedPuzzles: new Set(),
+            activeItem: null,
+            fountainAttempt: [],
+            pianoAttempt: [],
+            symbolLockAttempt: [],
+            stainedGlassAttempt: [],
+            placedLenses: new Set(),
+            chemStationIngredients: [],
+        };
+
+        const itemData = {
+            'lens_stars': {
+                title: 'Линза Звезд', desc: 'Тяжелая линза из отполированного обсидиана. На ней выгравированы созвездия.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/c6eb24fc-0e12-41c3-8147-323436c330c9'
+            },
+            'lens_nature': {
+                title: 'Линза Природы', desc: 'Линза из изумруда, теплая на ощупь. Внутри нее словно застыл лепесток.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/3d73ccff-10bf-4554-a5b7-6c7d30670fa2'
+            },
+            'lens_mechanism': {
+                title: 'Линза Механизмов', desc: 'Линза из дымчатого кварца со сложной гравировкой в виде шестеренок.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/8756a2d7-3085-48a7-a7bb-7bfa249b634e'
+            },
+            'time_key': {
+                title: 'Ключ Времени', desc: 'Сложный механизм, который мягко гудит и светится.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/947b7a2e-5f42-437a-9a10-effb109f3851'
+            },
+            'winding_key': {
+                title: 'Ключ', desc: 'Маленький латунный ключ.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/f6295182-d0e4-4f43-9681-4ab7b3f34e86'
+            },
+            'mosaic_tile': {
+                title: 'Каменная плитка', desc: 'Часть напольной мозаики.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/12d4b9cb-c0d7-41b0-a0f9-00841fd2652b'
+            },
+            'time_key_prototype': {
+                title: 'Прототип Ключа', desc: 'Незаконченный артефакт.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/b48a68c0-988d-4d1e-92dc-95e062a1845d'
+            },
+            'purifying_essence': {
+                title: 'Очищающая эссенция', desc: 'Светящаяся жидкость в колбе. Пахнет озоном и цветами.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/83fd7a2d-4808-4731-a045-3c5a3d623ec2'
+            },
+            'moon_petal': {
+                title: 'Лунный лепесток', desc: 'Лепесток редкой азалии. Он слабо светится в темноте.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/2a9b44bf-42cc-434f-9017-fbd5d8386df9'
+            },
+            'pure_water': {
+                title: 'Чистая вода', desc: 'Колба с кристально чистой водой из фонтана.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/c0f7ac70-0665-45d3-a4bf-b1c0291a7e60'
+            },
+            'empty_flask': {
+                title: 'Пустая колба', desc: 'Стеклянная колба, подходящая для смешивания реагентов.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/44dcb019-eab2-4816-a402-a3a250b6f816'
+            },
+            'poetry_book': {
+                title: 'Книга Стихов', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/48544e80-82ec-43ee-b805-1a466a5600b5', content: `<p>Вы листаете страницы. Два стихотворения привлекают ваше внимание.</p><div style="text-align: left; border-left: 2px solid var(--accent-color); padding-left: 15px; margin-bottom: 20px;"><p><em>"Три стража времени мой секрет хранят,<br>Парящий Орел, что выше всех наград,<br>Под ним Змея, что мудростью полна,<br>И Медведь лесной, чья сила велика."</em></p></div><div style="text-align: left; border-left: 2px solid var(--accent-color); padding-left: 15px;"><p><em>"Скорбь наполнила мой дом, <br>А мелодия забыта. <br>Горе заперто замком, <br>Если карта не раскрыта."</em></p></div>`
+            },
+            'alchemist_journal': {
+                title: 'Журнал Алхимика', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/d691f0fb-5f27-4565-9d22-df4a3d7dacee', content: `<p>В журнале вы находите рецепт "Очищающей эссенции": <em>"Смешать в чистой воде один цветок из сада"</em> Также вы видите набросок замка с символами и последовательностью:</p><div style="font-size: 2em; margin: 15px 0;">🔥 💧 🌍 💨</div>`
+            },
+            'diary_page': {
+                title: 'Страница из дневника', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/7a798b12-c073-4534-bbf6-ef0faa6a248d', content: `<p><em>"Сегодня я долго смотрел на свое отражение в потемневшем зеркале. Время — безжалостный гравер. В юности я мнил себя королем своей судьбы, верил, что смогу покорить любую вершину. Каждый мой день был озарен светом полуденного солнца, а амбиции пылали так ярко, что, казалось, могли растопить звезды и луну... Я строил, изобретал, любил... Я верил, что мое лето будет вечным.</em></p> <p><em>Но осень приходит для всех. Незаметно для себя я стал замечать, как с древа моей жизни опадает первый лист. Сначала один, потом другой... Мелодия мира стала тише, краски поблекли. Теперь я чувствую себя выброшенным на берег созданием, что отчаянно хватает ртом воздух, а вокруг лишь тишина и песок. Море, в котором я когда-то плавал, лишь тихо шепчет вдалеке. Я запер свои самые горькие сожаления за витражом."</em></p>`
+            },
+            'family_photo': {
+                title: 'Старая фотография', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/0af4605e-34c0-4489-8b9c-10215f7dcc2a', content: `<p>Семья Вейл на фоне поместья. На обороте выцветшими чернилами написано: <em>"Наше первое лето здесь. <strong>1876</strong> год."</em></p>`
+            },
+            'bookmark': {
+                title: 'Старая закладка', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/4d0a19c6-d257-4ac8-8c93-a5287dffa3df', content: '<p>На старой закладке для книг красными чернилами обведено слово: <strong>(--- неразборчиво)НОС</strong>.</p>'
+            },
+            'astronomy_book': {
+                title: 'Книга по астрономии', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/a7ab0760-bea4-4112-9517-69e2270a4f1f',
+                content: `
+        <div style="text-align: left; font-size: 1.1em; line-height: 1.6;">
+            <p>Вы открываете тяжелый фолиант. Страницы пахнут пылью и озоном. Некоторые созвездия обведены, рядом с ними сделаны пометки рукой Элиаса.</p>
+            <hr style="border-color: var(--border-color); margin: 15px 0;">
+            <h3>Избранные Созвездия:</h3>
+            <ul>
+                <li><strong>Лира (Lyra):</strong> <em>"С Вегой, одной из ярчайших звезд. Мелодия космоса. Ее свет доходит до нас спустя десятилетия. Посмотреть на нее: ПВ 05ч 50м / Скл +80°."</em></li>
+                <li><strong>Большая Медведица (Ursa Major):</strong> <em>"Вечный указатель. Простые смертные видят в ней ковш, но я вижу ключ к порядку во вселенной."</em></li>
+                <li><strong>Лебедь (Cygnus):</strong> <em>"Летящий сквозь Млечный Путь. Там, в его крыле, скрыта туманность, которую я зову 'Призраком'. Она видна лишь под особым углом... Кажется, я записал ее координаты: ПВ 18ч 75м / Скл +25°"</em></li>
+                            <li><strong>Кассиопея (Cassiopeia):</strong> <em>"Королева на троне, вечно смотрящая на свою дочь Андромеду. Пять ярких звезд, образующих букву 'W'. Она... Она ключ ко всему. <strong>ПВ 01ч 25м / Скл +60°</strong>."</em></li>
+                </ul>
+        </div>
+    `
+            },
+            'sheet_music': {
+                title: 'Нотный лист', desc: 'Пожелтевший нотный лист с простой мелодией.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/941f674e-f8ac-4fc7-95e2-24b60bead328'
+            },
+            'invisible_ink_note': {
+                title: 'Записка невидимка', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/0fadcb17-1e3a-4a54-97ec-4fb6520c1972', content: '<p>Плотный лист бумаги. Кажется, на нем ничего нет. Но если поднести его к свету, можно разглядеть водяные знаки, но не более.</p>'
+            },
+            'librarians_note': {
+                title: 'Записка библиотекаря', readable: true,
+                icon: 'https://scanshape.ru/api/files/get/7493ea46-c8d6-47bb-95ee-0b475156280b', content: `</p><div style="text-align: left; border-left: 2px solid var(--accent-color); padding-left: 15px;"><em>"Я дитя мысли, но не имею голоса.<br>Я рассказываю о путешествиях к звездам, но никогда не покидал этой комнаты."</em></div>`
+            },
+            'ornate_key': {
+                title: 'Украшенный ключ', desc: 'Крошечный, богато украшенный ключ.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/52acdd05-1d24-481d-a2a8-d1f3438717ca'
+            },
+            'aetheria_bloom': {
+                title: 'Эфирный Цветок', desc: 'Светящийся синий цветок, пульсирующий мягким светом.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/3cf7d507-a84e-4cbe-88de-f930ab12daa4'
+            },
+            'crimsonthorn': {
+                title: 'Багряный Шип', desc: 'Темно-красный цветок с острыми шипами. Кажется опасным.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/2689d37e-9967-483d-ba92-e1bb37a81901'
+            },
+            'ghostpetal': {
+                title: 'Призрачный Лепесток', desc: 'Бледно-белый, почти полупрозрачный цветок. Холодный на ощупь.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/610c52ba-364e-464e-9883-b57cf21c63dc'
+            },
+            'sunspore': {
+                title: 'Солнечная Спора', desc: 'Золотистый грибовидный цветок, излучающий тепло.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/ff6cb064-9167-4feb-ad6f-747373c06bf7'
+            },
+            'shadowgem': {
+                title: 'Камень Тени', desc: 'Фиолетовый цветок с кристаллическими лепестками, поглощающими свет.', readable: false,
+                icon: 'https://scanshape.ru/api/files/get/dbc2fc23-c007-4102-80e8-acb3193f1d81'
+            },
+        };
+
+
+        window.checkGlobeCode = function () {
+            const code = Array.from(document.querySelectorAll('.g-input')).map(i => i.value).join('');
+            if (code === '1850') {
+                playSound('unlock');
+                showModal('Тайник в глобусе', '<p>Вы вводите год с фотографии. С тихим щелчком глобус открывается по экватору! Внутри вы находите пожелтевший <strong>нотный лист</strong>.</p>');
+                checkAndSolve('globe_opened', 'zone-globe');
+                addToInventory('sheet_music');
+                closeModal();
+            } else {
+                playSound('error');
+                document.getElementById('modal-feedback').textContent = 'Глобус не реагирует.';
+                document.getElementById('modal-feedback').className = 'incorrect';
+            }
+        }
+
+        window.onload = () => {
+            document.getElementById('password-submit').onclick = checkPassword;
+            document.getElementById('password-input').addEventListener('keyup', function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    document.getElementById('password-submit').click();
+                }
+            });
+            window.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    if (document.getElementById('item-viewer').style.display === 'flex') {
+                        closeItemViewer();
+                    } else if (document.getElementById('modal-container').classList.contains('visible')) {
+                        closeModal();
+                    } else if (document.getElementById('prologue-cutscene').classList.contains('active')) {
+                        endPrologue();
+                    }
+                }
+                const activeEl = document.activeElement;
+                const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT');
+
+                if (!isTyping) {
+                    if (event.key === 'ArrowLeft') {
+                        changeRoom(-1);
+                    }
+                    else if (event.key === 'ArrowRight') {
+                        changeRoom(1);
+                    }
+                }
+            });
+        };
+
+        const prologueScenes = [
+            {
+                img: 'https://scanshape.ru/api/files/get/d4f7ddd9-e6c0-46ef-931d-544727a44194',
+                text: 'Всё началось с сообщения без обратного адреса. Потёртая бумага, пахнущая озоном и пылью... и одно-единственное кодовое слово, ставшее вашим ключом и вашей ловушкой.',
+                duration: 13000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755598663/898e0045-8f79-414a-8175-ba2c2ad2e831_vmc9ml.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755598698/d9bbad08-e001-47e9-a66a-45cf223810a8_bbudym.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755598719/61742deb-fc23-46c4-9242-5af3302d314d_ufxpf5.mp3'
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/bf3f75bc-5799-4214-8711-64a0c340cd98',
+                text: 'И вот вы здесь. Перед вратами поместья, что темнеет на фоне заката, словно застывший во времени титан. Дверь отворяется с протестующим скрипом, впуская вас внутрь... чтобы тут же захлопнуться за спиной с неотвратимостью судьбы.',
+                duration: 17000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755598860/7a2bd293-c486-448d-ac89-89325572af99_w2kghl.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755598885/186afaaa-edda-4cdb-9c5f-eab66f5b85a8_ovioje.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755598899/4a6901d1-1a2c-491a-8285-3f09429bfdfe_kvriii.mp3'
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/aa3d1e5e-bad8-4355-bbd7-3a0c9336fac4',
+                text: 'Архивы говорят о человеке, рождённом в 1850 году. Элиас Вейл. Гений, чьё имя когда-то было синонимом прогресса. Он видел мир не как набор правил, а как симфонию, где каждая шестерёнка, каждый лепесток и каждая звезда играют свою партию.',
+                duration: 20000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599324/244592cc-32a1-48dd-acdd-72d485e0266d_bttz7v.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599337/63bc2687-e10e-4006-9255-fa665ffbe4ae_enniph.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599362/5b49c80c-fe55-4e1d-802e-67eb87ece433_dj62bs.mp3'
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/109eded3-da3b-4f9d-82d0-e6b4b687f73f',
+                text: 'Он был одержим не просто ходом часов, а именно природой времени. Он считал его не рекой, а океаном, полным скрытых течений, воспоминаний и несбывшихся возможностей.',
+                duration: 12000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599415/599b1100-16a0-4db8-bc3f-be9c8e64e1a4_c6lk3k.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599441/554d123f-ff89-4824-bb24-bb8bba014c8b_p3rjig.mp3',
+                    ''
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/7c668416-6c99-4cba-a8f4-957cb43ad712',
+                text: 'Трагедия, случившаяся в его семье, расколола его собственный мир. Потеряв самое дорогое, он посвятил остаток жизни одной цели: создать механизм, способный не повернуть время вспять, а найти в его эхе то, что было утрачено.',
+                duration: 15000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599686/826552fb-786f-4114-ada5-c12bcb25dd7b_wicxef.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599700/84ba6054-7f6f-48aa-9a66-a7be6c9b045d_pmwapw.mp3',
+                    ''
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/2b0a7ede-abff-4140-958f-2a12f39a5d7a',
+                text: 'Так родилась идея Небесного Хронографа - ХРОНОС. Его величайшая работа. Аппарат, созданный, чтобы слушать музыку звёзд и гармонизировать прошлое с настоящим. Его magnum opus... и его проклятие.',
+                duration: 18000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599780/4fbb8fee-129a-44bc-ad4d-ce9ffdb741ff_nfczvr.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599800/fdc60d3b-6272-4d90-a5fa-2b39e321720e_qifdf2.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599811/a97e9821-9695-42ce-a10f-039e4ead56a4_o3cuwg.mp3'
+                ]
+
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/2052ff4b-352d-4e11-852b-b61543b9d21e',
+                text: 'Для его запуска требовались три особых проводника: Линза Звёздного Света, чтобы видеть пути прошлого. Линза Природы, чтобы чувствовать биение жизни. И Линза Механизмов, чтобы понять логику всего сущего.',
+                duration: 15000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599880/0acbad73-b033-425e-b13d-7ee0124addc4_yzfq8a.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599893/38257b19-9d61-4542-b98a-efbaa2703554_s55r1b.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599905/a6b05c30-4ef6-4e34-8f54-ad98eb96153c_jdaktu.mp3'
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/46bc170d-abed-436e-aed4-758019473b3e',
+                text: 'Их объединял Ключ Времени — артефакт, который должен был стать последней нотой в его симфонии. Но Вейл не успел. Или же... успел, но цена оказалась слишком высока.',
+                duration: 14000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755599986/53926887-2691-4dd2-86d6-e1d94d900070_sejzp4.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755600549/57aab7f4-4a47-4192-80e4-300ef39037b7_c4wauq.mp3',
+                    ''
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/037f4547-88f9-4f5c-b5ff-42fa253b7973',
+                text: 'В ночь последнего эксперимента он исчез. Растворился в стенах собственного дома, оставив после себя лишь незавершённое творение и тишину, звенящую от не заданных вопросов.',
+                duration: 12000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755600083/a0a3b178-ec27-4fe6-b808-82c604ea7951_n7xbvc.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755600109/28f930c7-e69d-4873-80d2-00c7efffe302_rxwovt.mp3',
+                    ''
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/16b23abf-4cf5-478a-916e-de08aea6ae00',
+                text: 'Теперь его судьба — в ваших руках. Письмо было не приглашением, а криком о помощи, донесшимся сквозь время. Завершите его труд. Запустите ХРОНОС. И, возможно, вы не только найдёте выход, но и узнаете, что случилось с Элиасом Вейлом.',
+                duration: 19000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755600192/47b92acc-4a59-46bb-a8a9-3b4ee9fe8947_gyh68a.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755600204/6a043eb1-0a4f-4c12-a4d4-77a34a2892db_nd0nef.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755600216/9f4a3eb1-676b-4362-bdab-31de029aebe4_ktc3mr.mp3'
+                ]
+            }
+        ];
+
+        let currentSceneIndex = 0;
+        let prologueTimeout;
+        let isImg1Active = true;
+
+        const prologueElements = {
+            cutscene: null,
+            stage: null,
+            img1: null,
+            img2: null,
+            caption: null,
+            skipBtn: null,
+            narrationPlayer: null
+        };
+
+        let currentAudioQueue = [];
+        let audioQueueCallback = null;
+
+        function playAudioQueue(audioPlayer, sources, onFinished) {
+            const sourceArray = Array.isArray(sources) ? [...sources] : [sources];
+
+            if (!sourceArray || sourceArray.length === 0 || !sourceArray[0]) {
+                if (onFinished) onFinished();
+                return;
+            }
+
+            currentAudioQueue = sourceArray;
+            audioQueueCallback = onFinished;
+
+            audioPlayer.onended = () => {
+                currentAudioQueue.shift();
+                if (currentAudioQueue.length > 0) {
+                    audioPlayer.src = currentAudioQueue[0];
+                    audioPlayer.play().catch(e => {
+                        console.error("Ошибка воспроизведения аудио из очереди:", e);
+                        if (audioPlayer.onended) audioPlayer.onended();
+                    });
+                } else {
+                    audioPlayer.onended = null;
+                    if (audioQueueCallback) {
+                        audioQueueCallback();
+                        audioQueueCallback = null;
+                    }
+                }
+            };
+
+            audioPlayer.src = currentAudioQueue[0];
+            audioPlayer.play().catch(e => {
+                console.error("Ошибка запуска аудио очереди:", e);
+                if (audioPlayer.onended) audioPlayer.onended();
+            });
+        }
+
+        function startPrologue() {
+
+            closeModal();
+            prologueElements.cutscene = document.getElementById('prologue-cutscene');
+            prologueElements.stage = document.getElementById('prologue-stage');
+            prologueElements.img1 = document.getElementById('prologue-img-1');
+            prologueElements.img2 = document.getElementById('prologue-img-2');
+            prologueElements.caption = document.getElementById('prologue-caption');
+            prologueElements.skipBtn = document.getElementById('prologue-skip');
+            prologueElements.narrationPlayer = document.getElementById('prologue-narration');
+
+            prologueElements.skipBtn.onclick = endPrologue;
+            prologueElements.cutscene.classList.add('active');
+
+            currentSceneIndex = 0;
+            isImg1Active = true;
+            prologueElements.img2.style.opacity = '0';
+
+            prologueElements.img1.onload = () => {
+                prologueElements.img1.style.opacity = '1';
+                prologueElements.img1.onload = null;
+
+                setTimeout(() => {
+                    const firstScene = prologueScenes[0];
+                    prologueElements.caption.textContent = firstScene.text;
+                    prologueElements.caption.classList.add('visible');
+
+                    if (prologueElements.narrationPlayer && firstScene.audioSrc) {
+                        playAudioQueue(prologueElements.narrationPlayer, firstScene.audioSrc, showNextScene);
+                    } else {
+                        prologueTimeout = setTimeout(showNextScene, firstScene.duration);
+                    }
+                }, 2000);
+            };
+
+            prologueElements.img1.src = prologueScenes[0].img;
+        }
+
+        function showNextScene() {
+            currentSceneIndex++;
+            if (currentSceneIndex >= prologueScenes.length) {
+                endPrologue();
+                return;
+            }
+
+            prologueElements.caption.classList.remove('visible');
+
+            const scene = prologueScenes[currentSceneIndex];
+            const activeImg = isImg1Active ? prologueElements.img1 : prologueElements.img2;
+            const inactiveImg = isImg1Active ? prologueElements.img2 : prologueElements.img1;
+
+            inactiveImg.onload = () => {
+                activeImg.style.opacity = '0';
+                inactiveImg.style.opacity = '1';
+                isImg1Active = !isImg1Active;
+                inactiveImg.onload = null;
+
+                setTimeout(() => {
+                    prologueElements.caption.textContent = scene.text;
+                    prologueElements.caption.classList.add('visible');
+
+                    if (prologueElements.narrationPlayer && scene.audioSrc) {
+                        playAudioQueue(prologueElements.narrationPlayer, scene.audioSrc, showNextScene);
+                    } else {
+                        prologueTimeout = setTimeout(showNextScene, scene.duration);
+                    }
+                }, 1500);
+            };
+
+            inactiveImg.src = scene.img;
+        }
+
+        function endPrologue() {
+            closeModal();
+            clearTimeout(prologueTimeout);
+
+            if (prologueElements.narrationPlayer) {
+                currentAudioQueue = [];
+                audioQueueCallback = null;
+                prologueElements.narrationPlayer.onended = null;
+                prologueElements.narrationPlayer.pause();
+                prologueElements.narrationPlayer.src = '';
+            }
+
+            const cutsceneEl = document.getElementById('prologue-cutscene');
+            if (cutsceneEl) {
+                cutsceneEl.classList.remove('active');
+            }
+
+            const backgroundMusic = document.getElementById('bg-music');
+            if (backgroundMusic.paused) {
+                backgroundMusic.volume = 0.2;
+                backgroundMusic.play().catch(e => console.error("Ошибка воспроизведения фоновой музыки:", e));
+            } else {
+                backgroundMusic.volume = 0.2;
+            }
+
+            document.getElementById('game-container').classList.remove('locked');
+
+            setTimeout(() => {
+                showModal('Эхо Хронографа', `<p>Поместье Элиаса Вейла встречает вас тишиной, густой, как вековая пыль. Чтобы выбраться, вы должны запустить его последнее творение - Небесный Хронограф. Осмотритесь. История ждёт.</p><button onclick="closeModal()">Принять вызов</button>`);
+            }, 1500);
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const feedback = document.getElementById('password-feedback');
+            const correctPassword = 'оревуар';
+
+            if (input.value.trim().toLowerCase() === correctPassword.toLowerCase()) {
+                playSound('unlock');
+                const passwordMenu = document.getElementById('password-menu');
+                passwordMenu.classList.add('hidden');
+
+                const gameContainer = document.getElementById('game-container');
+
+
+                showModal('Поместье Вейлов', '<p>Дверь за вами захлопнулась. Густая, вековая тишина давит на уши. Хотите узнать, что привело вас сюда?</p><div style="display:flex; justify-content:center; gap: 20px; margin-top: 20px;"><button onclick="startPrologue()">Узнать историю</button><button onclick="endPrologue()">Начать игру</button></div>');
+
+                const roomTitleElement = document.getElementById('room-title');
+                roomTitleElement.textContent = roomNames[rooms[gameState.currentRoom]];
+
+                setupEventListeners();
+
+            } else {
+                playSound('error');
+                feedback.textContent = 'Неверное кодовое слово.';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        const playSound = (id) => { document.getElementById(`sfx-${id}`)?.play().catch(e => { }); };
+
+
+        function showBookList() {
+            const books = {
+                'gardening': 'Уход за хищными растениями в домашних условиях. Автор: С. Опаснова',
+                'history_future': 'Краткая история будущего. Автор: Пророк Анонимус',
+                'cooking_1': '101 способ приготовления мандрагоры (без криков). Автор: Шеф-повар Мама',
+                'self_help': 'Как перестать изобретать машины времени и начать жить. Автор: Доктор Спокойный',
+                'physics': 'Квантовая физика для котов. Автор: Э. Шрёдингер',
+                'politics': 'Баллотируемся в мэры Атлантиды: Пособие. Автор: В. Ластный',
+                'philosophy_1': 'О времени и огурцах: Метафизическое исследование. Автор: Диоген в Бочке',
+                'manual': 'Сборка собственного лабиринта: Дешево и сердито. Автор: И. Дедалов',
+                'sonnets': 'Сборник сонетов. Автор: Лирия Эхо',
+                'atlas': 'Атлас созвездий. Автор: А. Вечный',
+                'alchemy': 'Алхимические закуски: Превращаем свинец во фрикадельки. Автор: Г. Триждывеликий',
+                'cryptozoology': 'Таксономия призраков: Руководство для начинающих. Автор: И. Гоняев',
+                'linguistics': 'Разговорный язык древних горгулий. Том I. Автор: П. Окаменевший',
+                'history': 'История книгопечатания. Автор: F. Uecnfd',
+                'procrastination': 'Прокрастинация и путешествия во времени: Почему "сделаю это вчера" не работает. Автор: Профессор Завтрашний',
+                'fauna': 'Энциклопедия морской фауны. Автор: Ж. Кусто',
+                'architecture': 'Строительство невозможных арок персонажей. Автор: М. Балонидзе',
+                'philosophy_2': 'Если дерево упало в лесу, а путешественник во времени это предотвратил, был ли звук? Автор: Мыслитель',
+                'sundial': 'Солнечные часы не те за кого себя выдают. Автор: А. Н. Сыпится',
+                'memoirs': 'Мемуары одного доспеха. Автор: Сэр Ржавелот',
+                'cooking_2': 'Как правильно варить зелье невидимости, чтобы вас не поймали. Автор: Непиздей за Сотка из рода Отвечающих'
+            };
+            let bookListHTML = '<p>Вы смотрите на бесконечные ряды пыльных корешков.</p><ul style="list-style: none; padding: 0; text-align: left;">';
+            for (const key in books) {
+                bookListHTML += `<li style="padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer;" onmouseover="this.style.backgroundColor='rgba(212, 175, 55, 0.1)';" onmouseout="this.style.backgroundColor='transparent';" onclick="checkBook('${key}')">${books[key]}</li>`;
+            }
+            bookListHTML += '</ul>';
+            showModal('Каталог книг', bookListHTML);
+        }
+        function checkBook(bookKey) {
+            if (bookKey === 'atlas') {
+                playSound('secret');
+                showModal('Секрет найден!', '<p>Вы тянете за указанную книгу. С тихим щелчком открывается потайное отделение в полке. Внутри лежит небольшой <strong>украшенный ключ</strong>.</p>');
+                checkAndSolve('bookshelf_riddle', 'zone-bookshelf-puzzle');
+                addToInventory('ornate_key');
+                closeModal();
+            } else {
+                playSound('error');
+                showModal('Каталог книг', '<p>Вы пролистали книгу, но не нашли в ней ничего примечательного. Это не та книга.</p><button onclick="showBookList()">Вернуться к списку</button>');
+            }
+        }
+
+
+        function changeRoom(dir) {
+            playSound('click');
+            const n = gameState.currentRoom + dir;
+            if (n < 0 || n >= rooms.length) return;
+
+            const roomTitleElement = document.getElementById('room-title');
+            roomTitleElement.classList.add('fading');
+
+            document.getElementById(`room-${rooms[gameState.currentRoom]}`).classList.remove('active');
+            gameState.currentRoom = n;
+            document.getElementById(`room-${rooms[gameState.currentRoom]}`).classList.add('active');
+
+            document.getElementById('nav-arrow-left').classList.toggle('hidden', gameState.currentRoom === 0);
+            document.getElementById('nav-arrow-right').classList.toggle('hidden', gameState.currentRoom === rooms.length - 1);
+
+            setTimeout(() => {
+                roomTitleElement.textContent = roomNames[rooms[gameState.currentRoom]];
+                roomTitleElement.classList.remove('fading');
+            }, 600);
+        }
+
+
+
+        let draggedItemElement = null;
+        let draggedItemId = null;
+        let feedbackTimeout = null;
+
+
+        const itemInfoPopup = {
+            el: document.getElementById('item-info'),
+            title: document.getElementById('item-info-title'),
+            desc: document.getElementById('item-info-desc'),
+            timeout: null
+        };
+
+        function showItemInfo(title, desc) {
+            clearTimeout(itemInfoPopup.timeout);
+            itemInfoPopup.title.textContent = title;
+            itemInfoPopup.desc.textContent = desc;
+            itemInfoPopup.el.style.display = 'block';
+            itemInfoPopup.timeout = setTimeout(hideItemInfo, 3000);
+        }
+        function hideItemInfo() {
+            clearTimeout(itemInfoPopup.timeout);
+            itemInfoPopup.el.style.display = 'none';
+        }
+
+        function startDrag(event, itemId, itemDef) {
+            if (modal.container.classList.contains('visible') || itemViewer.container.style.display === 'flex') {
+                return;
+            }
+            event.preventDefault();
+
+            draggedItemId = itemId;
+            draggedItemElement.style.backgroundImage = `url('${itemDef.icon}')`;
+            draggedItemElement.style.left = `${event.clientX}px`;
+            draggedItemElement.style.top = `${event.clientY}px`;
+            draggedItemElement.style.display = 'block';
+
+            hideItemInfo();
+
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', endDrag, { once: true });
+        }
+
+        function dragMove(event) {
+            if (!draggedItemId) return;
+            draggedItemElement.style.left = `${event.clientX}px`;
+            draggedItemElement.style.top = `${event.clientY}px`;
+        }
+
+        function endDrag(event) {
+            if (!draggedItemId) return;
+
+            draggedItemElement.style.display = 'none';
+            const dropTarget = document.elementFromPoint(event.clientX, event.clientY);
+            const interactiveZone = dropTarget ? dropTarget.closest('.interactive-zone') : null;
+            document.removeEventListener('mousemove', dragMove);
+
+            if (interactiveZone) {
+                if (interactiveZone.id === 'zone-chem-station') {
+                    handleChemStationDrop(draggedItemId);
+                } else {
+                    interactiveZone.onclick();
+                }
+            }
+            draggedItemId = null;
+        }
+
+        function addToInventory(id) {
+            if (gameState.inventory.has(id)) return;
+            playSound('pickup');
+
+            const itemDef = itemData[id];
+            gameState.inventory.set(id, itemDef);
+
+            const itemEl = document.createElement('div');
+            itemEl.className = 'inventory-item';
+            itemEl.id = `inv-${id}`;
+            itemEl.style.backgroundImage = `url('${itemDef.icon}')`;
+
+            itemEl.onmouseover = () => {
+                if (!itemDef.readable) showItemInfo(itemDef.title, itemDef.desc);
+            };
+            itemEl.onmouseout = hideItemInfo;
+
+            if (itemDef.readable) {
+                itemEl.onclick = () => {
+                    playSound('click');
+                    showItemViewer(itemDef.title, itemDef.content);
+                };
+            } else {
+                itemEl.onmousedown = (event) => startDrag(event, id, itemDef);
+            }
+
+            document.getElementById('inventory-bar').appendChild(itemEl);
+        }
+
+        function removeFromInventory(id) {
+            const itemElement = document.getElementById(`inv-${id}`);
+            if (itemElement) itemElement.remove();
+            gameState.inventory.delete(id);
+            if (gameState.activeItem === id) gameState.activeItem = null;
+        }
+
+        const modal = { container: document.getElementById('modal-container'), title: document.getElementById('modal-title'), body: document.getElementById('modal-body') };
+        const showModal = (t, b) => { modal.title.innerText = t; modal.body.innerHTML = b; modal.container.classList.add('visible'); };
+        const closeModal = () => { playSound('click'); modal.container.classList.remove('visible'); if (gameState.activeItem) { document.getElementById(`inv-${gameState.activeItem}`)?.classList.remove('active'); gameState.activeItem = null; } };
+
+        function showFeedbackMessage(message) {
+            const feedbackEl = document.getElementById('feedback-message');
+            feedbackEl.textContent = message;
+            feedbackEl.classList.add('visible');
+            clearTimeout(feedbackTimeout);
+            feedbackTimeout = setTimeout(() => {
+                feedbackEl.classList.remove('visible');
+            }, 2500);
+        }
+
+        function handleChemStationDrop(itemId) {
+            const itemDef = itemData[itemId];
+            const validIngredients = ['moon_petal', 'pure_water', 'aetheria_bloom', 'crimsonthorn', 'ghostpetal', 'sunspore', 'shadowgem'];
+
+            if (validIngredients.includes(itemId)) {
+                playSound('click');
+                gameState.chemStationIngredients.push(itemId);
+                removeFromInventory(itemId);
+                showFeedbackMessage(`Вы добавили "${itemDef.title}" в колбу.`);
+            } else {
+                playSound('error');
+                showFeedbackMessage(`"${itemDef.title}" не подходит для этого рецепта.`);
+            }
+        }
+
+        const itemViewer = { container: document.getElementById('item-viewer'), title: document.getElementById('item-viewer-title'), body: document.getElementById('item-viewer-body') };
+        const showItemViewer = (t, b) => { itemViewer.title.innerHTML = t; itemViewer.body.innerHTML = b; itemViewer.container.style.display = 'flex'; };
+        const closeItemViewer = () => { playSound('click'); itemViewer.container.style.display = 'none'; };
+
+        function checkAndSolve(puzzleId, elementId = null) {
+            if (gameState.solvedPuzzles.has(puzzleId)) return;
+            gameState.solvedPuzzles.add(puzzleId);
+            if (elementId) {
+                document.getElementById(elementId)?.classList.add('solved');
+            }
+        }
+
+        function checkBookshelfCode() {
+            const code = document.getElementById('bookshelf-input').value;
+            const feedback = document.getElementById('modal-feedback');
+            if (code === '483') {
+                playSound('secret');
+                showModal('Тайник', '<p>Вы тянете нужные книги, и часть шкафа отъезжает в сторону, открывая нишу. Внутри на бархатной подушке лежит <strong>Линза Звезд</strong>.</p>');
+                checkAndSolve('bookshelf', 'zone-bookshelf-puzzle');
+                addToInventory('lens_stars');
+                closeModal();
+            } else {
+                playSound('error');
+                feedback.textContent = 'Ничего не происходит.';
+                feedback.className = 'incorrect';
+            }
+        }
+
+        function checkPortraitCode() {
+            const code = Array.from(document.querySelectorAll('.p-input')).map(i => i.value).join('');
+            const feedback = document.getElementById('modal-feedback');
+            if (code === '1876') {
+                playSound('secret');
+                showModal('Секрет Портрета', '<p>Вы выставляете правильный год. Глаза на портрете вспыхивают, и рама со скрипом отодвигается, открывая за собой <strong>настенный сейф</strong>.</p>');
+                checkAndSolve('portrait', 'zone-portrait');
+                document.getElementById('zone-wall-safe').classList.remove('hidden');
+                closeModal();
+            }
+            if (code === '1850') {
+                playSound('error');
+                feedback.textContent = 'Думала всё так просто?).';
+                feedback.className = 'incorrect';
+            } else {
+                playSound('error');
+                feedback.textContent = 'Ничего не произошло.';
+                feedback.className = 'incorrect';
+            }
+        }
+
+        function checkSafeCode() {
+            const code = document.getElementById('safe-input').value.toUpperCase();
+            if (code === 'ХРОНОС') {
+                playSound('unlock');
+                showModal('Сейф открыт', '<p>Замок щелкает, и тяжелая дверца открывается. Внутри лежит странный артефакт - <strong>Прототип Ключа Времени</strong> - и тяжелая <strong>книга по астрономии</strong>.</p>');
+                checkAndSolve('safe', 'zone-wall-safe');
+                addToInventory('time_key_prototype');
+                addToInventory('astronomy_book');
+                closeModal();
+            } else {
+                playSound('error');
+                document.getElementById('modal-feedback').textContent = 'Неверное кодовое слово.';
+                document.getElementById('modal-feedback').className = 'incorrect';
+            }
+        }
+
+        function checkCipherDisk() {
+            const ring1 = document.getElementById('ring1').value; const ring2 = document.getElementById('ring2').value; const ring3 = document.getElementById('ring3').value;
+            const feedback = document.getElementById('modal-feedback');
+            if (ring1 === 'eagle' && ring2 === 'snake' && ring3 === 'bear') {
+                playSound('secret');
+                feedback.innerHTML = '<p class="correct">Диск щелкает! В центре вместо чисел вышел текст: <strong>Коды скрывают всё</strong>.</p>';
+                document.querySelector('.modal-content button').disabled = true;
+                checkAndSolve('cipher', 'zone-cipher-disk');
+            } else {
+                playSound('error');
+                feedback.textContent = 'Комбинация неверна.';
+                feedback.className = 'incorrect';
+            }
+        }
+
+        function playPianoKey(note) {
+            playSound('click');
+            gameState.pianoAttempt.push(note);
+            const feedback = document.getElementById('modal-feedback');
+            feedback.textContent = `Сыграно: ${gameState.pianoAttempt.join('-')}`;
+            if (gameState.pianoAttempt.length === 4) {
+                if (gameState.pianoAttempt.join('') === 'CAGE') {
+                    playSound('secret');
+                    showModal('Тайник в рояле', '<p>Когда последняя нота затихает, открывается небольшой тайник. Внутри вы находите <strong>старую фотографию</strong> семьи Вейл.</p>');
+                    checkAndSolve('piano', 'zone-grand-piano');
+                    addToInventory('family_photo');
+                    closeModal();
+                } else {
+                    playSound('error');
+                    feedback.textContent = `Не та мелодия.`;
+                    feedback.className = 'incorrect';
+                    setTimeout(() => { gameState.pianoAttempt = []; feedback.textContent = ''; }, 1000);
+                }
+            }
+        }
+
+
+        function pressFountainButton(symbol) {
+            playSound('click');
+            gameState.fountainAttempt.push(symbol);
+            const feedback = document.getElementById('modal-feedback');
+            feedback.textContent = `Введено: ${gameState.fountainAttempt.join(' ')}`;
+            if (gameState.fountainAttempt.length === 5) {
+                if (gameState.fountainAttempt.join('') === '💧🍃☀️🌙💧') {
+                    playSound('secret');
+                    showModal('Фонтан оживает', '<p>С глухим гулом трубы оживают, и фонтан наполняется чистой водой! Вместе с водой на поверхность всплывает <strong>каменная плитка с узором</strong>. Теперь можно набрать воды.</p>');
+                    checkAndSolve('fountain', 'zone-dry-fountain');
+                    addToInventory('mosaic_tile');
+                    closeModal();
+                } else {
+                    playSound('error');
+                    feedback.textContent = 'Неверная последовательность.';
+                    feedback.className = 'incorrect';
+                    setTimeout(() => { gameState.fountainAttempt = []; feedback.textContent = ''; }, 1000);
+                }
+            }
+        }
+
+        function pressStainedGlass(symbol, element) {
+            playSound('click');
+            gameState.stainedGlassAttempt.push(symbol);
+            element.style.opacity = '0.5'; element.disabled = true;
+
+            const correctSequence = ['sun', 'moon', 'leaf', 'fish'];
+
+            if (gameState.stainedGlassAttempt.length === 4) {
+                let isCorrect = gameState.stainedGlassAttempt.join('') === correctSequence.join('');
+
+                if (isCorrect) {
+                    playSound('secret');
+                    showModal('Тайник в стене', '<p>Часть витража с щелчком уходит в стену, открывая тайник! Внутри лежит <strong>журнал алхимика</strong>.</p>');
+                    checkAndSolve('stained_glass', 'zone-stained-glass');
+                    addToInventory('alchemist_journal');
+                    closeModal();
+                } else {
+                    playSound('error');
+                    setTimeout(() => {
+                        document.querySelectorAll('.stained-glass-button').forEach(btn => { btn.style.opacity = '1'; btn.disabled = false; });
+                        gameState.stainedGlassAttempt = [];
+                    }, 800);
+                }
+            }
+        }
+
+        function combineChemicals() {
+            playSound('secret');
+            showModal('Эссенция готова', '<p>Вы смешиваете ингредиенты по рецепту. Жидкость в колбе начинает ярко светиться. Вы получили <strong>Очищающую эссенцию</strong>!</p>');
+            checkAndSolve('chem_station', 'zone-chem-station');
+            addToInventory('purifying_essence');
+            removeFromInventory('pure_water');
+            removeFromInventory('moon_petal');
+            closeModal();
+        }
+
+        function pressSymbolLockButton(symbol, element) {
+            playSound('click');
+            gameState.symbolLockAttempt.push(symbol);
+            element.style.opacity = '0.5'; element.disabled = true;
+            if (gameState.symbolLockAttempt.length === 4) {
+                if (gameState.symbolLockAttempt.join('') === 'firewaterearthair') {
+                    playSound('secret');
+                    showModal('Тайная панель', '<p>Символы загораются. Панель на стене отъезжает в сторону, открывая в нише <strong>проекционное устройство</strong>.</p>');
+                    checkAndSolve('symbol_lock', 'zone-symbol-lock');
+                    document.getElementById('zone-projection-device').classList.remove('hidden');
+                    closeModal();
+                } else {
+                    playSound('error');
+                    setTimeout(() => {
+                        document.querySelectorAll('.symbol-lock-btn').forEach(btn => { btn.style.opacity = '1'; btn.disabled = false; });
+                        gameState.symbolLockAttempt = [];
+                    }, 800);
+                }
+            }
+        }
+
+        function updateTelescopeCoords() {
+            const ra = (document.getElementById('ra-slider').value / 100).toFixed(2).replace('.', 'ч ') + 'м';
+            const dec = document.getElementById('dec-slider').value;
+            const focus = document.getElementById('focus-slider').value;
+            document.getElementById('ra-value').textContent = `ПВ: ${ra}`;
+            document.getElementById('dec-value').textContent = `Скл: +${dec}°`;
+            document.getElementById('focus-value').textContent = `Фокус: ${focus}%`;
+        }
+
+        function alignTelescope() {
+            const ra_val = document.getElementById('ra-slider').value;
+            const dec_val = document.getElementById('dec-slider').value;
+            const focus_val = document.getElementById('focus-slider').value;
+            const feedback = document.getElementById('modal-feedback');
+            feedback.className = '';
+
+            if (ra_val === '125' && dec_val === '60') {
+                if (focus_val !== '50') {
+                    playSound('error');
+                    feedback.textContent = 'Изображение не в фокусе. Настройте резкость.';
+                    feedback.className = 'incorrect';
+                } else {
+                    playSound('secret');
+                    showModal('Звездная Карта', '<p>Телескоп наводится на нужную точку. В окуляре вы видите созвездие Кассиопеи. Одновременно на куполе обсерватории загорается проекция - схема из 5 звезд. Вы зарисовываете ее. Это ключ к Хронографу!</p>');
+                    checkAndSolve('telescope', 'zone-telescope');
+                    closeModal();
+                }
+                return;
+            }
+
+            if (ra_val === '1875' && dec_val === '25') {
+                if (parseInt(focus_val) < 75) {
+                    playSound('error');
+                    feedback.textContent = 'Видна лишь размытая туманность. Нужно сфокусироваться получше.';
+                    feedback.className = 'incorrect';
+                } else {
+                    playSound('click');
+                    feedback.textContent = 'Вы видите Призрачную Туманность. В голове всплывают строки из дневника Элиаса: "Я смотрел в бездну, и она моргнула мне в ответ миллиардом глаз..."';
+                    feedback.className = 'correct';
+                }
+                return;
+            }
+
+            if (ra_val === '550' && dec_val === '80') {
+                playSound('error');
+                feedback.textContent = 'Слишком ярко! Свет Веги ослепляет. Возможно, нужен какой-то светофильтр, чтобы разглядеть детали...';
+                feedback.className = 'incorrect';
+                return;
+            }
+
+            playSound('error');
+            feedback.textContent = 'Ничего примечательного в этой области неба нет.';
+            feedback.className = 'incorrect';
+        }
+
+        function startFinalPuzzle() {
+            const canvas = document.getElementById('star-map');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const CLICKABLE_STAR_RADIUS = 8;
+            const BACKGROUND_STAR_COUNT = 80;
+            const DECOY_CLICKABLE_COUNT = 15;
+            const MIN_DISTANCE = 20;
+
+            let allStars = [];
+            let selectionOrder = [];
+            let selectedStars = new Set();
+
+            function isOverlapping(newStar) {
+                for (const star of allStars) {
+                    if (Math.sqrt((newStar.x - star.x) ** 2 + (newStar.y - star.y) ** 2) < MIN_DISTANCE) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            const cassiopeiaShape = [
+                { x: 0, y: 0, isKey: true, id: 'cas1', solutionOrder: 0 },
+                { x: 70, y: 70, isKey: true, id: 'cas2', solutionOrder: 1 },
+                { x: 150, y: 10, isKey: true, id: 'cas3', solutionOrder: 2 },
+                { x: 230, y: 70, isKey: true, id: 'cas4', solutionOrder: 3 },
+                { x: 300, y: 0, isKey: true, id: 'cas5', solutionOrder: 4 }
+            ];
+            const cassiopeiaWidth = 300;
+            const cassiopeiaHeight = 70;
+            const offsetX = Math.random() * (canvas.width - cassiopeiaWidth - 40) + 20;
+            const offsetY = Math.random() * (canvas.height - cassiopeiaHeight - 40) + 20;
+
+            const cassiopeiaStars = cassiopeiaShape.map(s => ({ ...s, x: s.x + offsetX, y: s.y + offsetY }));
+            allStars.push(...cassiopeiaStars);
+            const correctStarIds = new Set(cassiopeiaStars.map(s => s.id));
+
+            const bbox = { minX: offsetX, maxX: offsetX + cassiopeiaWidth, minY: offsetY, maxY: offsetY + cassiopeiaHeight };
+            for (let i = 0; i < DECOY_CLICKABLE_COUNT; i++) {
+                let newStar, attempts = 0;
+                do {
+                    const side = Math.floor(Math.random() * 4);
+                    let x, y;
+                    if (side === 0) {
+                        x = Math.random() * canvas.width; y = Math.random() * (bbox.minY - MIN_DISTANCE);
+                    } else if (side === 1) {
+                        x = Math.random() * canvas.width; y = bbox.maxY + MIN_DISTANCE + Math.random() * (canvas.height - bbox.maxY - MIN_DISTANCE);
+                    } else if (side === 2) {
+                        x = Math.random() * (bbox.minX - MIN_DISTANCE); y = Math.random() * canvas.height;
+                    } else {
+                        x = bbox.maxX + MIN_DISTANCE + Math.random() * (canvas.width - bbox.maxX - MIN_DISTANCE);
+                    }
+                    newStar = { x, y, isDecoy: true, id: `decoy${i}` };
+                    attempts++;
+                } while (isOverlapping(newStar) && attempts < 100);
+                if (attempts < 100) allStars.push(newStar);
+            }
+
+            for (let i = 0; i < BACKGROUND_STAR_COUNT; i++) {
+                let newStar, attempts = 0;
+                do {
+                    newStar = { x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 1.5 + 0.5 };
+                    attempts++;
+                } while (isOverlapping(newStar) && attempts < 100);
+                if (attempts < 100) allStars.push(newStar);
+            }
+
+            const allClickableStars = allStars.filter(s => s.isKey || s.isDecoy);
+
+            function draw(isFinal = false) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let linePoints = isFinal ? [...cassiopeiaStars].sort((a, b) => a.solutionOrder - b.solutionOrder) : selectionOrder;
+
+                if (linePoints.length > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(linePoints[0].x, linePoints[0].y);
+                    for (let i = 1; i < linePoints.length; i++) ctx.lineTo(linePoints[i].x, linePoints[i].y);
+                    ctx.strokeStyle = isFinal ? 'var(--accent-color)' : 'rgba(212, 175, 55, 0.5)';
+                    ctx.lineWidth = isFinal ? 3 : 2;
+                    ctx.stroke();
+                }
+
+                allStars.forEach(star => {
+                    const isClickable = star.isKey || star.isDecoy;
+                    const radius = isClickable ? CLICKABLE_STAR_RADIUS : star.radius;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = selectedStars.has(star) ? 'var(--accent-color)' : (isClickable ? 'white' : '#aaa');
+                    ctx.fill();
+                });
+            }
+
+            function checkWinCondition() {
+                if (selectedStars.size !== 5) return false;
+                for (const star of selectedStars) {
+                    if (!star.isKey) return false;
+                }
+                return true;
+            }
+
+            canvas.onclick = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                let starClicked = null;
+                for (const star of allClickableStars) {
+                    if (Math.sqrt((x - star.x) ** 2 + (y - star.y) ** 2) < CLICKABLE_STAR_RADIUS + 5) {
+                        starClicked = star;
+                        break;
+                    }
+                }
+
+                if (starClicked) {
+                    playSound('click');
+                    if (selectedStars.has(starClicked)) {
+                        selectedStars.delete(starClicked);
+                        selectionOrder = selectionOrder.filter(s => s.id !== starClicked.id);
+                    } else {
+                        selectedStars.add(starClicked);
+                        selectionOrder.push(starClicked);
+                    }
+
+                    if (checkWinCondition()) {
+                        playSound('secret');
+                        checkAndSolve('star_map_calibrated');
+                        canvas.onclick = null;
+                        draw(true);
+                        const feedback = document.getElementById('modal-feedback');
+                        feedback.textContent = "Хронограф откалиброван! Требуется финальная активация.";
+                        feedback.className = 'correct';
+                    } else {
+                        draw();
+                    }
+                }
+            };
+            draw();
+        }
+
+
+        function setupEventListeners() {
+            draggedItemElement = document.getElementById('dragged-item');
+            document.getElementById('zone-mantelpiece').onclick = () => {
+                if (gameState.solvedPuzzles.has('music_box')) return showModal('Музыкальная шкатулка', '<p>Стоит изящная шкатулка. Ее мелодия умолкла, а символы стёрлись.</p>');
+                if (draggedItemId === 'winding_key') {
+                    playSound('unlock');
+                    showModal('Музыкальная шкатулка', '<p>Ключ идеально подходит. Вы заводите механизм, и шкатулка играет короткую, но запоминающуюся мелодию. Вы замечаете символы, выгравированные под крышкой: <strong>💧 🍃 ☀️ 🌙 💧</strong>.</p>');
+                    checkAndSolve('music_box', 'zone-mantelpiece');
+                    removeFromInventory('winding_key');
+                } else {
+                    showModal('Музыкальная шкатулка', '<p>На полке из стоит инкрустированная перламутром музыкальная шкатулка. Скважина для завода покрыта пылью.</p>');
+                }
+            };
+
+            document.getElementById('zone-foyer-staircase').onclick = () => {
+                showModal('Парадная лестница', '<p>Величественная лестница из темного дуба ведет наверх, в темноту. Ступени изношены от бесчисленных шагов, и кажется, что по ночам по ним все еще кто-то ходит.</p>');
+            };
+
+            document.getElementById('zone-foyer-window').onclick = () => {
+                showModal('Большое окно', '<p>Огромное окно на лестничной площадке. Лунный свет едва пробивается сквозь вековую пыль, рисуя на полу призрачные узоры. За стеклом — лишь непроглядная тьма.</p>');
+            };
+
+            document.getElementById('zone-foyer-archway').onclick = () => {
+                showModal('Арка', '<p>Резная деревянная арка ведет вглубь дома. Оттуда тянет запахом старых книг и пыли. Вероятно, это проход в библиотеку.</p>');
+            };
+
+            document.getElementById('zone-foyer-portraits').onclick = () => {
+                showModal('Портреты', '<p>Два портрета в тяжелых золоченых рамах смотрят вниз. Лица на них стерлись от времени, но кажется, что люди с них следят за каждым вашим движением.</p>');
+            };
+
+            document.getElementById('zone-foyer-chandelier').onclick = () => {
+                showModal('Хрустальная люстра', '<p>Массивная хрустальная люстра висит под потолком. Большинство свечей не горит, но даже те, что зажжены, дают тусклый, дрожащий свет, отбрасывая на стены пляшущие тени.</p>');
+            };
+
+            document.getElementById('zone-mosaic-floor').onclick = () => {
+                if (gameState.solvedPuzzles.has('mosaic')) return showModal('Напольная мозаика', '<p>Мозаика из тусклого камня теперь цела, а ее тайный механизм больше не реагирует.</p>');
+                if (draggedItemId === 'mosaic_tile') {
+                    playSound('secret');
+                    showModal('Тайник в полу', '<p>Плитка идеально встает на свое место. Пол вибрирует, и центральная часть мозаики поднимается, открывая тайник. Внутри на бархатной подкладке лежит <strong>Линза Природы</strong>.</p>');
+                    checkAndSolve('mosaic', 'zone-mosaic-floor');
+                    addToInventory('lens_nature');
+                    removeFromInventory('mosaic_tile');
+                } else {
+                    showModal('Напольная мозаика', '<p>В центре вестибюля выложена сложная мозаика, изображающая фазы луны. В самом центре не хватает одной плитки, зияет дыра.</p>');
+                }
+            };
+
+            document.getElementById('zone-strange-machine').onclick = () => {
+                if (gameState.solvedPuzzles.has('strange_machine')) return showModal('Странный аппарат', '<p>Этот аппарат больше не работает. Свою задачу он выполнил.</p>');
+                const hasPrototype = gameState.inventory.has('time_key_prototype');
+                if (draggedItemId === 'lens_mechanism' && hasPrototype) {
+                    playSound('secret');
+                    showModal('Ключ Времени', '<p>Вы вставляете Линзу Механизмов и Прототип Ключа. Аппарат гудит и преобразует прототип в полноценный <strong>Ключ Времени</strong>! Он ярко светится.</p>');
+                    checkAndSolve('strange_machine', 'zone-strange-machine');
+                    addToInventory('time_key');
+                    removeFromInventory('time_key_prototype');
+                    removeFromInventory('lens_mechanism');
+                } else {
+                    showModal('Странный аппарат', '<p>Это сложный механизм. На нем есть слоты для линзы и еще одного, более сложного артефакта. Похоже, это калибровочное устройство.</p>');
+                }
+            };
+
+            document.getElementById('zone-projection-device').onclick = () => {
+                if (gameState.solvedPuzzles.has('projector')) return showModal('Проекционное устройство', '<p>Линза чиста, но проекция больше не появляется.</p>');
+                if (draggedItemId === 'purifying_essence') {
+                    playSound('secret');
+                    showModal('Секретная проекция', '<p>Вы протираете линзу эссенцией. Она становится кристально чистой! Аппарат оживает, проецируя на стену изображение... и открывает потайную нишу, где лежит <strong>Линза Механизмов</strong>.</p>');
+                    checkAndSolve('projector', 'zone-projection-device');
+                    addToInventory('lens_mechanism');
+                    removeFromInventory('purifying_essence');
+                } else {
+                    showModal('Проекционное устройство', '<p>Странный аппарат с большой, помутневшей от времени линзой. Ее нужно чем-то очистить.</p>');
+                }
+            };
+            document.getElementById('zone-armillary-sphere').onclick = () => {
+                showModal('Армиллярная сфера', '<p>Это армиллярная сфера, древний астрономический инструмент, представляющий небесную сферу. Элиас, должно быть, использовал ее для отслеживания движения звезд.</p>');
+            };
+
+            document.getElementById('zone-wall-charts').onclick = () => {
+                showModal('Настенные карты', '<p>Стены увешаны сложными звездными картами и астрономическими расчетами. Похоже, Элиас был одержим поиском определенной точки в космосе.</p>');
+            };
+
+            document.getElementById('zone-observatory-windows').onclick = () => {
+                showModal('Окна обсерватории', '<p>Огромные арочные окна обсерватории выходят на вечную, беззвездную ночь. Или, может быть, звезды просто скрыты от глаз, ожидая, когда их найдут.</p>');
+            };
+
+            document.getElementById('zone-desk-globe').onclick = () => {
+                showModal('Настольный глобус', '<p>Старый глобус Земли. Континенты на нем немного отличаются от тех, что вы знаете. Возможно, это отражение другого времени или просто художественная вольность.</p>');
+            };
+
+            document.getElementById('zone-final-chronograph').onclick = () => {
+                if (gameState.solvedPuzzles.has('final')) {
+                    return showModal('Небесный Хронограф', '<p>Аппарат гудит, его миссия выполнена. Путь на свободу открыт.</p>');
+                }
+
+                if (draggedItemId === 'time_key' && gameState.solvedPuzzles.has('star_map_calibrated')) {
+                    playSound('win');
+                    showModal('Эхо Хронографа', `<h2>ПОБЕДА!</h2><p>Вы вставляете Ключ Времени в активированный Хронограф. Механизм приходит в движение, выпуская сноп света в потолок. Двери поместья со скрипом отпираются. Путь на свободу открыт!</p><button onclick="startEpilogue()">Выйти на улицу</button>`);
+                    checkAndSolve('final');
+                    return;
+                }
+
+                if (draggedItemId === 'lens_nature' || draggedItemId === 'lens_stars') {
+                    const lensId = draggedItemId;
+                    if (gameState.placedLenses.has(lensId)) {
+                        showModal('Небесный Хронограф', '<p>Такая линза уже установлена.</p>');
+                        return;
+                    }
+
+                    playSound('unlock');
+                    gameState.placedLenses.add(lensId);
+                    removeFromInventory(lensId);
+
+                    if (gameState.placedLenses.size === 2) {
+                        showModal('Небесный Хронограф', `<p>Вы вставляете последнюю линзу. Обе линзы встают на место со щелчком. Аппарат слабо загудел, теперь ему требуется калибровка.</p>`);
+                        checkAndSolve('lenses_placed');
+                    } else {
+                        showModal('Небесный Хронограф', `<p>Вы вставили ${itemData[lensId].title} в одно из гнезд. Осталось найти вторую.</p>`);
+                    }
+                    return;
+                }
+
+                if (gameState.solvedPuzzles.has('lenses_placed')) {
+                    if (gameState.solvedPuzzles.has('telescope')) {
+                        showModal('Финальная Калибровка', `<p>Линзы на месте! Аппарат проецирует на панель перед вами карту звездного неба... Найдите и соедините звезды созвездия Кассиопеи, чтобы откалибровать механизм!</p>
+                        <canvas id="star-map" class="star-map-canvas" width="400" height="250"></canvas>
+                        <div id="modal-feedback" style="height: 25px; margin-top:10px;"></div>`);
+                        setTimeout(startFinalPuzzle, 100);
+                    } else {
+                        showModal('Небесный Хронограф', '<p>Линзы на месте. Аппарат гудит, но для калибровки нужно навести телескоп на правильное созвездие.</p>');
+                    }
+                } else {
+                    let message = '<p>Главное творение Вейла. В центре механизма два пустых гнезда для линз и один центральный слот для ключа.</p>';
+                    if (gameState.placedLenses.size === 1) {
+                        const placedLensName = itemData[[...gameState.placedLenses][0]].title;
+                        message = `<p>Хронограф, в котором уже установлена ${placedLensName}. Требуется еще одна линза.</p>`;
+                    }
+                    showModal('Небесный Хронограф', message);
+                }
+            };
+
+            document.getElementById('zone-grandfather-clock').onclick = () => {
+                if (gameState.solvedPuzzles.has('clock')) return showModal('Старинные часы', '<p>Массивные часы из темного дуба стоят неподвижно. Маятник замер, словно время в этом доме остановилось. Свою единственную тайну они уже отдали.</p>');
+                showModal('Старинные часы', '<p>Вы открываете стеклянную дверцу. Воздух пахнет пылью и машинным маслом. Внутри замершего механизма, зацепившись за шестеренку, висит небольшой <strong>латунный ключ</strong>.</p>');
+                checkAndSolve('clock', 'zone-grandfather-clock');
+                addToInventory('winding_key');
+            };
+            document.getElementById('zone-stained-glass').onclick = () => {
+                if (gameState.solvedPuzzles.has('stained_glass')) return showModal('Витражное окно', '<p>Свет тускло проходит через цветное стекло, но его секрет уже раскрыт.</p>');
+                gameState.stainedGlassAttempt = [];
+                showModal('Тайна Витража', `<p>Огромное витражное окно... На некоторых элементах есть едва заметные нажимные пластины.</p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+
+                        <button class="stained-glass-button" onclick="pressStainedGlass('leaf', this)">🍃</button>
+                                                <button class="stained-glass-button" onclick="pressStainedGlass('sun', this)">☀️</button>
+
+                         <button class="stained-glass-button" onclick="pressStainedGlass('moon', this)">🌙</button>
+                                                 <button class="stained-glass-button" onclick="pressStainedGlass('fish', this)">🐟</button>
+                    </div>`);
+            };
+
+            document.getElementById('zone-mirror').onclick = () => {
+                showModal('Потускневшее зеркало', '<p>Огромное зеркало в тяжелой позолоченной раме. Амальгама помутнела от времени. Вам кажется, что ваше отражение на мгновение стареет, а на поверхности стекла проступает слово, написанное пылью: <strong>(неразборчиво)</strong>.</p>');
+            };
+            document.getElementById('zone-armor').onclick = () => {
+                if (gameState.solvedPuzzles.has('armor_item')) return showModal('Рыцарские доспехи', '<p>Пустые доспехи молчаливо стоят на страже. Их перчатка пуста.</p>');
+                showModal('Рыцарские доспехи', '<p>Потемневшие от времени латы стоят на страже у стены. В стальной перчатке рыцаря зажат пожелтевший листок. Вы осторожно достаете его. Это <strong>страница из дневника</strong>.</p>');
+                addToInventory('diary_page');
+                checkAndSolve('armor_item', 'zone-armor');
+            };
+            document.getElementById('zone-console-table').onclick = () => {
+                if (gameState.solvedPuzzles.has('console_table_unlocked')) return showModal('Резной столик', '<p>Ящик столика пуст.</p>');
+                if (draggedItemId === 'ornate_key') {
+                    playSound('unlock');
+                    showModal('Ящик открыт', '<p>Ключ идеально подходит к замку. Внутри ящика на бархатной подкладке лежит <strong>пустая колба</strong>, готовая для алхимических опытов.</p>');
+                    addToInventory('empty_flask');
+                    removeFromInventory('ornate_key');
+                    checkAndSolve('console_table_unlocked', 'zone-console-table');
+                } else {
+                    showModal('Резной столик', '<p>Изящный резной столик из темного дерева. Его поверхность покрыта слоем пыли. Верхний ящик заперт на крошечный, сложный замок.</p>');
+                }
+            };
+            document.getElementById('zone-writers-desk').onclick = () => {
+                if (gameState.solvedPuzzles.has('desk_searched')) return showModal('Письменный стол', '<p>Вы уже все осмотрели. Стол из красного дерева, покрытый пылью. Больше ничего интересного.</p>');
+                showModal('Письменный стол', '<p>На массивном столе царит беспорядок. Среди старых бумаг вы находите чистый на вид, но плотный лист бумаги. Вы забираете его с собой. Это <strong>записка невидимка</strong>.</p>');
+                addToInventory('invisible_ink_note');
+                checkAndSolve('desk_searched', 'zone-writers-desk');
+            };
+
+            document.getElementById('zone-lab-ingredient-shelves').onclick = () => {
+                showModal('Полки с реагентами', '<p>Сотни склянок и банок выстроены в идеальном порядке. Каждая подписана каллиграфическим почерком Элиаса: "Измельченный лунный камень", "Эссенция снов", "Слезы грифона"... Большинство из них, похоже, просто плод его воображения.</p>');
+            };
+
+            document.getElementById('zone-lab-distiller').onclick = () => {
+                showModal('Перегонный аппарат', '<p>Сложная система из стекла и меди. В центральной колбе медленно кипит и переливается фиолетовая жидкость, но конечный продукт, кажется, испаряется, не достигая приемной колбы. Незавершенный эксперимент.</p>');
+            };
+
+            document.getElementById('zone-lab-microscope').onclick = () => {
+                showModal('Микроскоп', '<p>Старинный латунный микроскоп. Вы заглядываете в окуляр и видите лишь размытые цветные пятна на предметном стекле. Тайна, видимая лишь под правильным увеличением.</p>');
+            };
+
+            document.getElementById('zone-study-microscope').onclick = () => {
+                showModal('Микроскоп', '<p>Старинный латунный микроскоп. Вы заглядываете в окуляр и видите лишь размытые цветные пятна на предметном стекле.</p>');
+            };
+            document.getElementById('zone-lab-scales').onclick = () => {
+                showModal('Аптекарские весы', '<p>Точные аптекарские весы. На одной чаше лежит одинокое перо неизвестной птицы, идеально уравновешенное крошечной свинцовой гирькой на другой. Символ баланса или просто забытый предмет?</p>');
+            };
+
+            document.getElementById('zone-lab-drawers-left').onclick = () => {
+                if (gameState.solvedPuzzles.has('lab_drawers_left_searched')) {
+                    showModal('Ящики слева', '<p>Вы уже обыскали эти ящики. Кроме запаха нафталина и пыли, там ничего нет.</p>');
+                    return;
+                }
+                playSound('secret');
+                showModal('Находка в ящике', '<p>Покопавшись в одном из ящиков, под стопкой старых чертежей вы находите бережно завернутый в ткань <strong>Эфирный Цветок</strong>.</p>');
+                addToInventory('aetheria_bloom');
+                checkAndSolve('lab_drawers_left_searched');
+            };
+
+            document.getElementById('zone-lab-drawers-right').onclick = () => {
+                if (gameState.solvedPuzzles.has('lab_drawers_right_searched')) {
+                    showModal('Ящики справа', '<p>Эти ящики пусты. Кто-то забрал все их содержимое давным-давно.</p>');
+                    return;
+                }
+                playSound('secret');
+                showModal('Находка в ящике', '<p>В самом дальнем углу ящика вы нащупываете что-то колючее. Это идеально сохранившийся <strong>Багряный Шип</strong>.</p>');
+                addToInventory('crimsonthorn');
+                checkAndSolve('lab_drawers_right_searched');
+            };
+
+            document.getElementById('zone-desk-lamp').onclick = () => {
+                if (draggedItemId === 'invisible_ink_note') {
+                    playSound('secret');
+                    showModal('Свет Истины', '<p>Вы подносите записку к яркому свету лампы. От тепла на бумаге начинают проступать слова, написанные симпатическими чернилами: <strong>"Птица в отчаянии бьется в своей C-A-G-E"</strong>. Это подсказка к мелодии!</p>');
+                    checkAndSolve('note_revealed');
+                    removeFromInventory('invisible_ink_note');
+                    return;
+                }
+                showModal('Настольная лампа', '<p>Старая лампа. Она отбрасывает на стол теплый, яркий круг света.</p>');
+            };
+            document.getElementById('zone-persian-rug').onclick = () => {
+                if (gameState.solvedPuzzles.has('rug_moved')) return showModal('Персидский ковер', '<p>Тяжелый ковер сдвинут в сторону, открывая тайник.</p>');
+                playSound('click');
+                showModal('Персидский ковер', '<p>Вы с трудом отворачиваете край тяжелого пыльного ковра. Под ним вы видите <strong>расшатанную половицу</strong>, которая явно отличается от остальных.</p>');
+                document.getElementById('zone-loose-floorboard').classList.remove('hidden');
+                checkAndSolve('rug_moved', 'zone-persian-rug');
+            };
+            document.getElementById('zone-loose-floorboard').onclick = () => {
+                if (gameState.solvedPuzzles.has('floorboard_opened')) return showModal('Расшатанная половица', '<p>Тайник под полом пуст.</p>');
+                playSound('secret');
+                showModal('Тайник под полом', '<p>Вы поддеваете половицу. В маленьком углублении под ней лежит <strong>старая закладка</strong>.</p>');
+                addToInventory('bookmark');
+                checkAndSolve('floorboard_opened', 'zone-loose-floorboard');
+            };
+            document.getElementById('zone-globe').onclick = () => {
+                if (gameState.solvedPuzzles.has('globe_opened')) return showModal('Старинный глобус', '<p>Глобус открыт, его секретный отсек пуст.</p>');
+                showModal('Загадка Глобуса', `<p>Большой настольный глобус. На его основании есть небольшой кодовый замок, похожий на тот, что на портрете. Требуется ввести год.</p>
+                     <div><input type="number" class="code-input g-input" maxlength="1"><input type="number" class="code-input g-input" maxlength="1"><input type="number" class="code-input g-input" maxlength="1"><input type="number" class="code-input g-input" maxlength="1"></div>
+                     <div id="modal-feedback"></div> <button onclick="checkGlobeCode()">Ввести</button>`);
+            };
+            document.getElementById('zone-portrait').onclick = () => {
+                if (gameState.solvedPuzzles.has('portrait')) return showModal('Портрет', '<p>Портрет смотрит на вас с укором, но рама больше не двигается.</p>');
+                showModal('Загадка Портрета', `<p>Портрет сурового мужчины, Элиаса Вейла (род 1850). На раме есть кодовый замок из четырех цифр.</p>
+                    <div><input type="number" class="code-input p-input" maxlength="1"><input type="number" class="code-input p-input" maxlength="1"><input type="number" class="code-input p-input" maxlength="1"><input type="number" class="code-input p-input" maxlength="1"></div>
+                    <div id="modal-feedback"></div> <button onclick="checkPortraitCode()">Ввести</button>`);
+            };
+            document.getElementById('zone-wall-safe').onclick = () => {
+                if (gameState.solvedPuzzles.has('safe')) return showModal('Настенный сейф', '<p>Сейф открыт и пуст.</p>');
+                showModal('Сейф', `<p>Массивный сейф с буквенным замком. Требуется кодовое слово.</p>
+                    <input type="text" id="safe-input" class="text-input" maxlength="6">
+                    <div id="modal-feedback"></div> <button onclick="checkSafeCode()">Открыть</button>`);
+            };
+            document.getElementById('zone-cipher-disk').onclick = () => {
+                if (gameState.solvedPuzzles.has('cipher')) return showModal('Шифровальный диск', '<p>Диск замер, показав свою тайну.</p>');
+                showModal('Шифровальный диск', `<p>Странный диск с тремя вращающимися кольцами с изображениями животных. Порядок их установки должен что-то значить.</p>
+                    <div style="margin: 20px 0; display: flex; justify-content: center; gap: 10px;">
+                        <select id="ring1" class="code-input" style="width: auto; height: auto; font-size: 1.2em; padding: 5px;"><option value="none">--</option><option value="eagle">🦅</option><option value="wolf">🐺</option><option value="snake">🐍</option></select>
+                        <select id="ring2" class="code-input" style="width: auto; height: auto; font-size: 1.2em; padding: 5px;"><option value="none">--</option><option value="owl">🦉</option><option value="snake">🐍</option><option value="lion">🦁</option></select>
+                        <select id="ring3" class="code-input" style="width: auto; height: auto; font-size: 1.2em; padding: 5px;"><option value="none">--</option><option value="fish">🐟</option><option value="deer">🦌</option><option value="bear">🐻</option></select>
+                    </div>
+                    <button onclick="checkCipherDisk()">Проверить</button><div id="modal-feedback"></div>`);
+            };
+            document.getElementById('zone-bookshelf-puzzle').onclick = () => {
+                if (gameState.solvedPuzzles.has('bookshelf_riddle')) return showModal('Книжный шкаф', '<p>Бесконечные ряды книг. Вы уже нашли то, что искали.</p>');
+
+                if (gameState.solvedPuzzles.has('bookshelf')) {
+                    showBookList();
+                    return;
+                }
+
+                showModal('Секрет в книгах', `<p>Огромный шкаф до потолка. Некоторые книги отмечены номерами. Похоже, здесь нужен числовой код.</p>
+                <div><input type="text" id="bookshelf-input" class="text-input" maxlength="3" style="width:150px;"></div>
+                <div id="modal-feedback"></div> <button onclick="checkBookshelfCode()">Потянуть за книгу</button>`);
+            };
+
+            document.getElementById('zone-library-desk').onclick = () => {
+                if (gameState.solvedPuzzles.has('desk_searched_library')) return showModal('Стол библиотекаря', '<p>Вы уже все осмотрели. Ничего нового.</p>');
+                showModal('Стол библиотекаря', '<p>На пыльном столе лежит одинокая записка, исписанная каллиграфическим почерком. Вы забираете ее. Это <strong>записка библиотекаря</strong>.</p>');
+                addToInventory('librarians_note');
+                checkAndSolve('desk_searched_library', 'zone-library-desk');
+            };
+            document.getElementById('zone-grand-piano').onclick = () => {
+                if (gameState.solvedPuzzles.has('piano')) {
+                    return showModal('Рояль', '<p>Тихий рояль, его тайна раскрыта.</p>');
+                }
+
+                if (draggedItemId === 'sheet_music') {
+                    playSound('secret');
+                    showModal('Ноты на месте', '<p>Вы ставите ноты на пюпитр. Теперь можно сыграть мелодию.</p>');
+                    removeFromInventory('sheet_music');
+                    checkAndSolve('piano_ready');
+                    return;
+                }
+
+                if (gameState.solvedPuzzles.has('piano_ready')) {
+                    gameState.pianoAttempt = [];
+                    showModal('Мелодия из прошлого', `<p>Нужно сыграть правильную мелодию по нотам.</p><div class="piano-keys" style="display:flex; justify-content:center; margin-top:15px;"><button class="piano-key" onclick="playPianoKey('C')">C</button><button class="piano-key" onclick="playPianoKey('D')">D</button><button class="piano-key" onclick="playPianoKey('E')">E</button><button class="piano-key" onclick="playPianoKey('F')">F</button><button class="piano-key" onclick="playPianoKey('G')">G</button><button class="piano-key" onclick="playPianoKey('A')">A</button></div> <div id="modal-feedback"></div>`);
+                    return;
+                }
+
+                showModal('Рояль', '<p>Старинный рояль. Клавиши покрыты пылью. На пюпитре пусто, нужно сначала положить туда ноты.</p>');
+            };
+            document.getElementById('zone-dry-fountain').onclick = () => {
+                if (gameState.inventory.has('pure_water')) {
+                    return showModal('Фонтан', '<p>Фонтан тихо журчит, наполненный чистой водой. Вы уже набрали, сколько нужно.</p>');
+                }
+
+                if (gameState.solvedPuzzles.has('fountain')) {
+                    if (draggedItemId === 'empty_flask') {
+                        playSound('secret');
+                        showModal('Вода набрана', '<p>Вы подносите колбу к струе и набираете кристально чистую воду.</p>');
+                        addToInventory('pure_water');
+                        removeFromInventory('empty_flask');
+                        closeModal();
+                    } else {
+                        showModal('Фонтан', '<p>Фонтан полон чистой воды. Нужно найти подходящую емкость, чтобы набрать ее.</p>');
+                    }
+                } else {
+                    gameState.fountainAttempt = [];
+                    showModal('Загадка Фонтана', `<p>На основании фонтана панель с пятью кнопками.</p><div class="fountain-buttons"><button onclick="pressFountainButton('💧')">💧</button> <button onclick="pressFountainButton('🍃')">🍃</button> <button onclick="pressFountainButton('☀️')">☀️</button><button onclick="pressFountainButton('🌙')">🌙</button> <button onclick="pressFountainButton('⭐')">⭐</button></div> <div id="modal-feedback"></div>`);
+                }
+            };
+            document.getElementById('zone-moonpetal-plant').onclick = () => {
+                if (gameState.inventory.has('moon_petal')) return showModal('Лунная азалия', '<p>Вы уже сорвали лепесток с этого редкого растения.</p>');
+                showModal('Лунная азалия', '<p>Это редкое растение, чьи лепестки светятся в темноте. Вы срываете один <strong>лунный лепесток</strong>.</p>');
+                addToInventory('moon_petal');
+            };
+
+            document.getElementById('zone-study-bookshelf').onclick = () => {
+                showModal('Книжный шкаф', '<p>Ряды фолиантов в кожаных переплетах. На корешках тисненые золотом названия: "Трактат о Непостоянстве Времени", "Атлас Невидимых Звезд", "Парадоксы Времени". Каждая книга кажется тяжелее, чем должна быть.</p>');
+            };
+            document.getElementById('zone-study-window').onclick = () => {
+                showModal('Окно в кабинете', '<p>Тяжелые бархатные шторы обрамляют вид на заросший сад. За окном царит вечный закат, не подвластный ходу времени.</p>');
+            };
+
+            document.getElementById('zone-desk-papers').onclick = () => {
+                showModal('Бумаги на столе', '<p>Стопки бумаг, исписанных сложными формулами, чертежами шестеренок и астрономическими расчетами. Среди них вы замечаете обрывок с фразой: "Время — это не река, а скорее... замок, к которому нужно подобрать ключ."</p>');
+            };
+
+            document.getElementById('zone-chem-station').onclick = () => {
+                if (gameState.solvedPuzzles.has('chem_station')) {
+                    return showModal('Химический стол', '<p>Беспорядок из колб и пробирок. Вы уже создали здесь все, что было нужно.</p>');
+                }
+
+                if (gameState.chemStationIngredients.length > 0) {
+                    const correctRecipe = ['pure_water', 'moon_petal'];
+                    const currentIngredients = gameState.chemStationIngredients.sort().join(',');
+
+                    if (currentIngredients === correctRecipe.sort().join(',')) {
+                        playSound('secret');
+                        showModal('Эссенция готова', '<p>Вы смешиваете ингредиенты по рецепту. Жидкость в колбе начинает ярко светиться. Вы получили <strong>Очищающую эссенцию</strong>!</p>');
+                        checkAndSolve('chem_station', 'zone-chem-station');
+                        addToInventory('purifying_essence');
+                        gameState.chemStationIngredients = [];
+                    } else {
+                        playSound('error');
+                        showModal('Неудача', '<p>Вы смешали ингредиенты, но... ничего не произошло, кроме неприятного запаха. Похоже, рецепт был неверным. Все реагенты испорчены.</p>');
+                        gameState.chemStationIngredients = [];
+                        addToInventory('empty_flask');
+                    }
+                } else {
+                    showModal('Химический стол', '<p>Множество колб и реагентов.</p>');
+                }
+            };
+            document.getElementById('zone-reading-nook').onclick = () => {
+                if (gameState.solvedPuzzles.has('nook')) return showModal('Читальный уголок', '<p>Уютное кресло, но все интересное отсюда вы уже забрали.</p>');
+                showModal('Читальный уголок', '<p>В уютном уголке на кресле лежит забытая <strong>книга стихов</strong>.</p>');
+                checkAndSolve('nook', 'zone-reading-nook');
+                addToInventory('poetry_book');
+            };
+
+
+            document.getElementById('zone-library-ladder').onclick = () => {
+                showModal('Стремянка', '<p>Высокая деревянная стремянка приставлена к книжной полке. Она выглядит старой, но достаточно крепкой, чтобы достать до самых верхних томов, скрытых в тени под потолком.</p>');
+            };
+
+            document.getElementById('zone-library-fireplace').onclick = () => {
+                showModal('Большое окно в библиотеке', '<p>Огромное окно на у читального уголка. Солнечный свет едва пробивается сквозь вековую пыль, рисуя на полу призрачные узоры. </p>');
+            };
+
+            document.getElementById('zone-symbol-lock').onclick = () => {
+                if (gameState.solvedPuzzles.has('symbol_lock')) return showModal('Символьный замок', '<p>Панель открыта, за ней видно проекционное устройство.</p>');
+                gameState.symbolLockAttempt = [];
+                showModal('Замок Стихий', `<p>На стене запертая панель с четырьмя кнопками с алхимическими символами стихий. Нужна подсказка.</p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                        <button class="symbol-lock-btn" onclick="pressSymbolLockButton('fire', this)">🔥</button>
+                        <button class="symbol-lock-btn" onclick="pressSymbolLockButton('air', this)">💨</button>
+                                                <button class="symbol-lock-btn" onclick="pressSymbolLockButton('water', this)">💧</button>
+                        <button class="symbol-lock-btn" onclick="pressSymbolLockButton('earth', this)">🌍</button>
+                    </div>`);
+            };
+
+
+            document.getElementById('zone-telescope').onclick = () => {
+                if (gameState.solvedPuzzles.has('telescope')) return showModal('Телескоп', '<p>Телескоп настроен на Кассиопею. Звезды прекрасны.</p>');
+                showModal('Настройка Телескопа', `<p>Огромный телескоп, направленный в небо. Чтобы его использовать, нужно выставить точные координаты и настроить фокус.</p>
+        <div style="margin: 10px 0;"><label for="ra-slider" id="ra-value">ПВ: 0ч 00м</label><input type="range" id="ra-slider" min="0" max="2400" value="0" step="1" oninput="updateTelescopeCoords()" style="width: 80%;"></div>
+        <div style="margin: 10px 0;"><label for="dec-slider" id="dec-value">Скл: +0°</label><input type="range" id="dec-slider" min="0" max="90" value="0" step="1" oninput="updateTelescopeCoords()" style="width: 80%;"></div>
+        <div style="margin: 10px 0;"><label for="focus-slider" id="focus-value">Фокус: 50%</label><input type="range" id="focus-slider" min="0" max="100" value="50" step="1" oninput="updateTelescopeCoords()" style="width: 80%;"></div>
+        <div id="modal-feedback"></div> <button onclick="alignTelescope()">Настроить</button>`);
+                updateTelescopeCoords();
+            };
+            document.getElementById('zone-orrery').onclick = () => {
+                showModal('Механический планетарий', '<p>Искусная модель солнечной системы из латуни и серебра. Планеты замерли в своем вечном танце. Кажется, некоторые из них можно вращать, но последовательность их расположения утеряна.</p>');
+            };
+
+            document.getElementById('zone-star-chart-puzzle').onclick = () => {
+                showModal('Настенная звездная карта', '<p>Огромная карта ночного неба. Некоторые звезды тускло светятся. Если присмотреться, можно заметить крошечные отверстия рядом с самыми яркими из них. Возможно, сюда нужно что-то вставить, чтобы соединить их в правильном порядке.</p>');
+            };
+            const createFlowerCollectible = (zoneId, itemId, itemName) => {
+                const zone = document.getElementById(zoneId);
+                zone.onclick = () => {
+                    if (gameState.inventory.has(itemId)) {
+                        showModal(itemName, '<p>Вы уже собрали все цветы в этом месте.</p>');
+                        return;
+                    }
+                    playSound('pickup');
+                    showModal('Собран новый цветок!', `<p>Вы осторожно срываете цветок и кладете его в сумку. Это <strong>${itemName}</strong>.</p>`);
+                    addToInventory(itemId);
+                    zone.classList.add('hidden');
+                };
+            };
+
+            createFlowerCollectible('zone-aetheria-bloom', 'aetheria_bloom', 'Эфирный Цветок');
+            createFlowerCollectible('zone-crimsonthorn', 'crimsonthorn', 'Багряный Шип');
+            createFlowerCollectible('zone-ghostpetal', 'ghostpetal', 'Призрачный Лепесток');
+            createFlowerCollectible('zone-sunspore', 'sunspore', 'Солнечная Спора');
+            createFlowerCollectible('zone-shadowgem', 'shadowgem', 'Камень Тени');
+        }
+
+        const epilogueScenes = [
+            {
+                img: 'https://scanshape.ru/api/files/get/ab23c075-7688-4915-8c9f-9c0f84039635',
+                text: 'Дверь поместья отворилась, выпуская вас не в Ваш привычный мир, а в безмолвное царство зимы. Снег, густой и бесшумный, падал с бархатного неба, укрывая землю саваном.',
+                duration: 12000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755602864/f126cd02-87a8-4b0c-9583-57fa61f1ea70_gl3seo.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755602881/dc8b6bac-a5db-457a-9f89-e9ce6b8ae38d_tykgym.mp3',
+                    ''
+                ]
+
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/3ef858d2-9c99-4a81-9ced-2db96784b878',
+                text: 'Вы шли вперёд без цели, но неведомая сила вела вас сквозь заснеженный лес. Единственным звуком был хруст снега под ногами — одинокая нота в оглушительной симфонии тишины.',
+                duration: 12000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755602947/e0b14d83-028a-4a3a-9dd7-9d6521a814f7_jgr9ln.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755602960/02ad1ddf-274b-486b-ba6e-87f52d80b3dd_csqxbg.mp3',
+                    ''
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/c0c3fc8e-af76-425d-9e61-012fdae1515b',
+                text: 'Впереди, там, где тропа должна была закончиться, вы увидели то, чего не могло здесь быть — древний, одинокий монолит, покрытый инеем и светящимися рунами.',
+                duration: 10000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755603004/4fc76921-0425-476b-878b-cfab8800e20e_fi4zsq.mp3',
+                    '',
+                    '',
+                ]
+            },
+            {
+                img: 'https://scanshape.ru/api/files/get/d6b35cda-d8a0-4568-9a10-282f45b92393',
+                text: 'Приблизившись, вы заметили на его шершавой поверхности небольшой клочок пергамента, примороженный к камню. Словно его оставили здесь мгновение назад... и вечность назад одновременно.',
+                duration: 13000,
+                audioSrc: [
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755603572/0d240c6a-bb30-4c91-83af-9b76d3bc218e_gh2lwy.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755603592/3bb6feda-a084-43d1-9f58-9789f95c7d80_k131v8.mp3',
+                    'https://res.cloudinary.com/dmszqnrma/video/upload/v1755603607/a893df2b-39a2-49bc-a554-6b55bc3ec98f_d0o9de.mp3',
+                ]
+            }
+        ];
+        let currentEpilogueIndex = 0;
+        let epilogueTimeout;
+        function startEpilogue() {
+            closeModal();
+            const cutscene = document.getElementById('prologue-cutscene');
+            const img1 = document.getElementById('prologue-img-1');
+            const img2 = document.getElementById('prologue-img-2');
+            const caption = document.getElementById('prologue-caption');
+            const skipBtn = document.getElementById('prologue-skip');
+            img1.src = '';
+            img2.src = '';
+            skipBtn.style.display = 'none';
+
+            document.getElementById('bg-music').pause();
+
+            cutscene.classList.add('active');
+            currentEpilogueIndex = 0;
+            isImg1Active = true;
+            img2.style.opacity = '0';
+
+            img1.onload = () => {
+                img1.style.opacity = '1';
+                img1.onload = null;
+                setTimeout(() => {
+                    caption.textContent = epilogueScenes[0].text;
+                    caption.classList.add('visible');
+                    const narrationPlayer = document.getElementById('prologue-narration');
+
+                    if (narrationPlayer && epilogueScenes[0].audioSrc) {
+                        playAudioQueue(narrationPlayer, epilogueScenes[0].audioSrc, showNextEpilogueScene);
+                    } else {
+                        epilogueTimeout = setTimeout(showNextEpilogueScene, epilogueScenes[0].duration);
+                    }
+
+                }, 1500);
+            };
+            img1.src = epilogueScenes[0].img;
+        }
+
+        function showNextEpilogueScene() {
+            currentEpilogueIndex++;
+            if (currentEpilogueIndex >= epilogueScenes.length) {
+                endEpilogue();
+                return;
+            }
+
+            const caption = document.getElementById('prologue-caption');
+            caption.classList.remove('visible');
+
+            const scene = epilogueScenes[currentEpilogueIndex];
+            const activeImg = isImg1Active ? document.getElementById('prologue-img-1') : document.getElementById('prologue-img-2');
+            const inactiveImg = isImg1Active ? document.getElementById('prologue-img-2') : document.getElementById('prologue-img-1');
+
+            inactiveImg.onload = () => {
+                activeImg.style.opacity = '0';
+                inactiveImg.style.opacity = '1';
+                isImg1Active = !isImg1Active;
+                inactiveImg.onload = null;
+
+                setTimeout(() => {
+                    caption.textContent = scene.text;
+                    caption.classList.add('visible');
+                    const narrationPlayer = document.getElementById('prologue-narration');
+
+                    if (narrationPlayer && scene.audioSrc) {
+                        playAudioQueue(narrationPlayer, scene.audioSrc, showNextEpilogueScene);
+                    } else {
+                        epilogueTimeout = setTimeout(showNextEpilogueScene, scene.duration);
+                    }
+                }, 1500);
+            };
+            inactiveImg.src = scene.img;
+        }
+
+        function endEpilogue() {
+            const narrationPlayer = document.getElementById('prologue-narration');
+            if (narrationPlayer) {
+                currentAudioQueue = [];
+                audioQueueCallback = null;
+                narrationPlayer.onended = null;
+                narrationPlayer.pause();
+                narrationPlayer.src = '';
+            }
+
+            clearTimeout(epilogueTimeout);
+            document.getElementById('prologue-cutscene').classList.remove('active');
+
+            setTimeout(() => {
+                document.getElementById('game-container').style.display = 'none';
+                document.getElementById('inventory-bar').style.display = 'none';
+                document.getElementById('modal-container').style.display = 'none';
+                playSound('error');
+                const finalMenu = document.getElementById('final-code-menu');
+                if (finalMenu) {
+                    finalMenu.classList.remove('hidden');
+                }
+            }, 1500);
+        }
+
+    </script>
+
+</body>
 
 </html>
-
-
